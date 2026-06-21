@@ -1,0 +1,33 @@
+Extreme Value Theory Analysis of SPY Daily Losses
+================================================
+
+Data:
+Asset: SPY
+Method: Monthly block maxima of daily losses
+Number of monthly maxima: 401 
+
+Monthly GEV model:
+mu: 0.01348859 
+sigma: 0.007856319 
+xi: 0.1999419 
+SE mu: 0.0004490949 
+SE sigma: 0.0003215061 
+SE xi: 0.04329738 
+
+Interpretation:
+The estimated shape parameter xi is positive, suggesting a heavy-tailed Frechet-type model for extreme SPY losses.
+
+Return levels:
+1-year return level: 3.82 %
+5-year return level: 6.31 %
+10-year return level: 7.64 %
+
+r-largest comparison:
+  r         mu       sigma        xi        se_mu     se_sigma
+1 1 0.01348859 0.007856319 0.1999419 0.0004490949 0.0003215061
+2 2 0.01558204 0.008646928 0.1857206 0.0004043570 0.0002688091
+3 3 0.01672819 0.008941195 0.1925087 0.0003716469 0.0002516822
+       se_xi
+1 0.04329738
+2 0.03452153
+3 0.03090302
