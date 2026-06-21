@@ -1,0 +1,22 @@
+R version 4.3.1 (2023-06-16)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS 15.7.4
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Europe/Rome
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ismev_1.42      mgcv_1.8-42     nlme_3.1-162    quantmod_0.4.28 TTR_0.24.4      xts_0.14.1      zoo_1.8-14     
+
+loaded via a namespace (and not attached):
+[1] compiler_4.3.1 Matrix_1.5-4.1 tools_4.3.1    curl_5.0.2     splines_4.3.1  grid_4.3.1     jsonlite_1.8.7 lattice_0.21-8
