@@ -78,14 +78,14 @@ $$
 
 The parameters are:
 
-- sigma > 0: scale parameter
-- xi: shape parameter
+- $$\sigma$$ > 0: scale parameter
+- $$\xi$$: shape parameter
 
 The shape parameter xi controls the tail behavior:
 
-- xi > 0: heavy-tailed distribution
-- xi = 0: exponential-type tail
-- xi < 0: bounded upper tail
+- $$\xi$$ > 0: heavy-tailed distribution
+- $$\xi$$ = 0: exponential-type tail
+- $$\xi$$ < 0: bounded upper tail
 
 For financial losses, xi is the key parameter. A positive xi suggests that extreme losses are heavy-tailed.
 
