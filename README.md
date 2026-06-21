@@ -101,17 +101,17 @@ $$
 
 The parameters are:
 
-- \(\mu\): location parameter
-- \(\sigma > 0\): scale parameter
-- \(\xi\): shape parameter
+- $$\(\mu\)$$: location parameter
+- $$\(\sigma > 0\)$$: scale parameter
+- $$\(\xi\)$$: shape parameter
 
-The shape parameter \(\xi\) determines the behavior of the tail:
+The shape parameter $$\(\xi\)$$ determines the behavior of the tail:
 
-- \(\xi > 0\): Fréchet type, heavy-tailed distribution
-- \(\xi = 0\): Gumbel type, light-tailed distribution
-- \(\xi < 0\): Weibull type, bounded upper tail
+- $$\(\xi > 0\)$$: Fréchet type, heavy-tailed distribution
+- $$\(\xi = 0\)$$: Gumbel type, light-tailed distribution
+- $$\(\xi < 0\)$$: Weibull type, bounded upper tail
 
-In financial applications, the shape parameter is especially important. A positive estimate of \(\xi\) suggests heavy-tailed losses, meaning that very large losses are more likely than they would be under thin-tailed models such as the normal distribution.
+In financial applications, the shape parameter is especially important. A positive estimate of $$\(\xi\)$$ suggests heavy-tailed losses, meaning that very large losses are more likely than they would be under thin-tailed models such as the normal distribution.
 
 ### 4. Maximum likelihood estimation
 
@@ -126,11 +126,11 @@ $$
 
 where:
 
-- \(\hat{\mu}\) is the estimated location parameter
-- \(\hat{\sigma}\) is the estimated scale parameter
-- \(\hat{\xi}\) is the estimated shape parameter
+- $$\(\hat{\mu}\)$$ is the estimated location parameter
+- $$\(\hat{\sigma}\)$$ is the estimated scale parameter
+- $$\(\hat{\xi}\)$$ is the estimated shape parameter
 
-The estimate of \(\xi\) is used to determine whether the extreme losses of SPY show evidence of heavy-tailed behavior.
+The estimate of $$\(\xi\)$$ is used to determine whether the extreme losses of SPY show evidence of heavy-tailed behavior.
 
 ### 5. Return levels
 
@@ -216,4 +216,4 @@ Instead of using only the single largest loss in each month, this approach also 
 
 The purpose of the \(r\)-largest comparison is not simply to choose the model with the best numerical fit. The goal is to check whether the estimated shape parameter remains stable as more extreme observations are included.
 
-If \(\hat{\xi}\) remains positive and similar across the monthly GEV model, yearly robustness check, and \(r\)-largest models, this supports the conclusion that SPY extreme losses exhibit heavy-tailed behavior.
+If $$\(\hat{\xi}\)$$ remains positive and similar across the monthly GEV model, yearly robustness check, and \(r\)-largest models, this supports the conclusion that SPY extreme losses exhibit heavy-tailed behavior.
