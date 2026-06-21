@@ -4,7 +4,7 @@ This chapter applies the **threshold exceedance** approach from Chapter 4 of Col
 
 The goal is to move beyond the block maxima method used in Chapter 3 and model all sufficiently large daily losses above a high threshold.
 
-Chapter 3 used one maximum per month. Chapter 4 uses all losses above a threshold. In other words, Chapter 4 stops throwing away useful tail observations like a statistical aristocrat.
+Chapter 3 used one maximum per month. Chapter 4 uses all losses above a threshold. In other words, Chapter 4 stops throwing away useful tail observations.
 
 ## Objective
 
@@ -78,16 +78,16 @@ $$
 
 The parameters are:
 
-- sigma > 0: scale parameter
-- xi: shape parameter
+- $$\sigma$$ > 0: scale parameter
+- $$\xi$$: shape parameter
 
-The shape parameter xi controls the tail behavior:
+The shape parameter $$\xi$$ controls the tail behavior:
 
-- xi > 0: heavy-tailed distribution
-- xi = 0: exponential-type tail
-- xi < 0: bounded upper tail
+- $$\xi$$ > 0: heavy-tailed distribution
+- $$\xi$$ = 0: exponential-type tail
+- $$\xi$$ < 0: bounded upper tail
 
-For financial losses, xi is the key parameter. A positive xi suggests that extreme losses are heavy-tailed.
+For financial losses, $$\xi$$  is the key parameter. A positive $$\xi$$  suggests that extreme losses are heavy-tailed.
 
 ## Threshold Selection
 
@@ -109,17 +109,17 @@ The 97.5% threshold is used as the main specification because it balances tail r
 
 To study threshold sensitivity, GPD models are fitted across a grid of thresholds from the 90th to the 99th percentile.
 
-The main diagnostic is the stability of the estimated shape parameter xi.
+The main diagnostic is the stability of the estimated shape parameter $$\xi$$.
 
-If the GPD model is appropriate above a threshold, the estimate of xi should remain reasonably stable as the threshold increases.
+If the GPD model is appropriate above a threshold, the estimate of $$\xi$$ should remain reasonably stable as the threshold increases.
 
-The results show that xi remains positive across the threshold range, although uncertainty increases at very high thresholds due to fewer exceedances.
+The results show that $$\xi$$ remains positive across the threshold range, although uncertainty increases at very high thresholds due to fewer exceedances.
 
 ## GPD Estimates
 
 The fitted GPD models give the following estimates:
 
-| Threshold | Exceedances | sigma | xi | SE(xi) |
+| Threshold | Exceedances | $$\sigma$$  | $$\xi$$  | SE($$\xi$$ ) |
 |---|---:|---:|---:|---:|
 | 95% | 421 | 0.0079 | 0.2178 | 0.0578 |
 | 97.5% | 211 | 0.0083 | 0.2927 | 0.0943 |
@@ -129,7 +129,7 @@ All three shape estimates are positive.
 
 This supports the conclusion that extreme SPY losses are heavy-tailed.
 
-The 99% estimate has a much larger standard error because there are fewer exceedances. This is the usual bias-variance tradeoff, except now it is wearing a finance costume.
+The 99% estimate has a much larger standard error because there are fewer exceedances. This is the usual bias-variance tradeoff.
 
 ## Return Levels
 
@@ -205,8 +205,7 @@ The probability plots generally show a reasonable fit.
 
 The quantile plots show some deviation in the most extreme observations, especially in the far upper tail. This is common in financial losses, where the largest crash days are difficult to model precisely.
 
-The return level plots show increasing uncertainty for longer return periods, which is expected because rare-event extrapolation is hard. Apparently probability refuses to give precise answers about events we barely observe. Rude, but fair.
-
+The return level plots show increasing uncertainty for longer return periods, which is expected because rare-event extrapolation is hard.
 ## Comparison with Chapter 3
 
 Chapter 3 used the **block maxima** method.
