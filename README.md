@@ -12,120 +12,134 @@ The analysis uses SPY adjusted closing prices downloaded from Yahoo Finance thro
 
 ## Methodology
 
-This project applies **Extreme Value Theory (EVT)** to model unusually large daily losses of SPY. Instead of modeling the full distribution of returns, the focus is only on the extreme left tail, where the largest market losses occur.
+This project applies **Extreme Value Theory (EVT)** to model unusually large daily losses of SPY. Instead of modeling the entire return distribution, the analysis focuses on the extreme left tail, where the largest market losses occur.
 
 ### 1. Daily log returns and losses
 
-Let \(P_t\) denote the adjusted closing price of SPY on day \(t\). Daily log returns are computed as
+Let \(P_t\) denote the adjusted closing price of SPY on day \(t\). Daily log returns are computed as:
 
-\[
-R_t = \log(P_t) - \log(P_{t-1}).
-\]
+$$
+R_t = \log(P_t) - \log(P_{t-1})
+$$
 
-Since the interest is in large negative returns, returns are transformed into losses:
+Because the objective is to study large negative returns, returns are transformed into losses:
 
-\[
-L_t = -R_t.
-\]
+$$
+L_t = -R_t
+$$
 
-Under this transformation, large negative returns become large positive losses. This allows the analysis to focus on upper-tail extremes of the loss distribution.
+This transformation turns large negative returns into large positive losses, allowing the problem to be studied as an upper-tail extreme value problem.
 
-### 2. Block maxima approach
+### 2. Block maxima
 
-The analysis follows the block maxima approach from Extreme Value Theory. The daily loss series is divided into monthly blocks, and from each month the maximum daily loss is extracted:
+The daily loss series is divided into monthly blocks. For each month, the largest daily loss is extracted:
 
-\[
-M_n = \max(L_1, L_2, \ldots, L_n),
-\]
+$$
+M_n = \max(L_1, L_2, \ldots, L_n)
+$$
 
-where \(M_n\) represents the largest daily loss within a given block.
+where \(M_n\) represents the maximum daily loss within a block of size \(n\).
 
-Monthly blocks are used because they provide more observations than annual blocks while still focusing on extreme events. Annual block maxima are also estimated as a robustness check.
+Monthly blocks are used as the main specification because they provide more observations than annual blocks while still focusing on extreme losses. Annual block maxima are also used as a robustness check.
 
 ### 3. Generalized Extreme Value distribution
 
-According to the extremal types theorem, suitably normalized block maxima converge in distribution to the **Generalized Extreme Value (GEV)** distribution. The GEV distribution is given by
+The block maxima approach is based on the extremal types theorem. If suitably normalized block maxima converge in distribution, their limiting distribution must belong to the **Generalized Extreme Value (GEV)** family:
 
-\[
+$$
 G(z) =
 \exp \left\{
 -\left[
 1 + \xi \left( \frac{z-\mu}{\sigma} \right)
 \right]^{-1/\xi}
-\right\},
-\]
+\right\}
+$$
 
-defined for
+defined on the support:
 
-\[
-1 + \xi \left( \frac{z-\mu}{\sigma} \right) > 0.
-\]
+$$
+1 + \xi \left( \frac{z-\mu}{\sigma} \right) > 0
+$$
 
-The three parameters are:
+The parameters are:
 
 - \(\mu\): location parameter
 - \(\sigma > 0\): scale parameter
 - \(\xi\): shape parameter
 
-The shape parameter \(\xi\) is especially important because it determines the type of tail behavior:
+The shape parameter controls the tail behavior:
 
 - \(\xi > 0\): Fréchet type, heavy-tailed distribution
 - \(\xi = 0\): Gumbel type, light-tailed distribution
 - \(\xi < 0\): Weibull type, bounded upper tail
 
-In the context of financial losses, a positive estimate of \(\xi\) suggests that extreme losses are heavy-tailed, meaning very large losses are more likely than they would be under a normal distribution.
+For financial losses, the key object is \(\xi\). A positive estimate of \(\xi\) suggests heavy-tailed extreme losses, meaning very large losses are more likely than under thin-tailed models such as the normal distribution.
 
 ### 4. Maximum likelihood estimation
 
-The GEV parameters are estimated by maximum likelihood using the monthly block maxima. The fitted model provides estimates of
+The GEV parameters are estimated by maximum likelihood using the monthly block maxima:
 
-\[
-\hat{\mu}, \quad \hat{\sigma}, \quad \hat{\xi}.
-\]
+$$
+\hat{\theta} = (\hat{\mu}, \hat{\sigma}, \hat{\xi})
+$$
 
-The estimated shape parameter is then used to assess whether SPY losses show evidence of heavy-tailed extreme behavior.
+where \(\hat{\theta}\) denotes the estimated parameter vector.
+
+The fitted model is then used to study the tail behavior of SPY losses and to estimate return levels.
 
 ### 5. Return levels
 
-The fitted GEV model is also used to estimate return levels. An \(m\)-block return level \(z_m\) is the level expected to be exceeded once every \(m\) blocks on average.
+An \(m\)-block return level \(z_m\) is the loss level expected to be exceeded once every \(m\) blocks on average. It satisfies:
 
-For a return period of \(m\) months, the return level satisfies
+$$
+P(M > z_m) = \frac{1}{m}
+$$
 
-\[
-P(M > z_m) = \frac{1}{m}.
-\]
+Equivalently:
 
-Using the GEV model, the return level is computed as
+$$
+G(z_m) = 1 - \frac{1}{m}
+$$
 
-\[
+For \(\xi \neq 0\), the GEV return level is:
+
+$$
 z_m =
 \mu - \frac{\sigma}{\xi}
 \left[
-1 - \{-\log(1 - 1/m)\}^{-\xi}
-\right],
-\]
+1 - \left\{ -\log\left(1 - \frac{1}{m}\right) \right\}^{-\xi}
+\right]
+$$
 
-for \(\xi \neq 0\).
+This project reports 1-year, 5-year, and 10-year return levels using monthly block maxima, corresponding to:
 
-This project reports 1-year, 5-year, and 10-year return levels based on monthly block maxima.
+$$
+m = 12,\quad m = 60,\quad m = 120
+$$
 
 ### 6. Model diagnostics
 
-The fitted GEV model is assessed using standard diagnostic plots:
+The fitted GEV model is evaluated using standard diagnostic plots:
 
 - probability plot
 - quantile plot
 - return level plot
 - density plot
 
-These plots help evaluate whether the GEV distribution provides a reasonable fit to the observed monthly maxima, especially in the upper tail where the most severe losses occur.
+These diagnostics assess whether the GEV model provides a reasonable fit to the observed monthly maxima, especially in the upper tail.
 
 ### 7. Robustness checks
 
 Two robustness checks are included.
 
-First, the model is re-estimated using yearly block maxima. This is closer to the classical block maxima approach but provides fewer observations.
+First, the GEV model is re-estimated using yearly block maxima. This is closer to the classical block maxima approach but produces fewer observations, so estimates are less stable.
 
-Second, the analysis uses the \(r\)-largest order statistics approach for \(r = 1, 2, 3\). Instead of keeping only the single largest loss in each month, this method also considers the second and third largest losses. The goal is to check whether the estimated shape parameter remains stable when more extreme observations are included.
+Second, the analysis uses the \(r\)-largest order statistics approach for:
 
-If the estimated \(\xi\) remains positive and similar across these specifications, this supports the conclusion that SPY extreme losses exhibit heavy-tailed behavior.
+$$
+r = 1, 2, 3
+$$
+
+Instead of keeping only the largest loss in each month, this approach also considers the second and third largest losses. The aim is to check whether the estimated shape parameter remains stable when more extreme observations are included.
+
+If \(\hat{\xi}\) remains positive and similar across monthly, yearly, and \(r\)-largest specifications, this supports the conclusion that SPY extreme losses exhibit heavy-tailed behavior.
