@@ -1,0 +1,61 @@
+Chapter 5: Extremes of Dependent Sequences
+==========================================
+
+Data:
+Asset: SPY
+Returns: daily log returns
+Losses: negative daily log returns
+Number of daily observations: 8403 
+
+Threshold:
+  threshold_probability threshold_value threshold_percent total_observations
+1                 0.975      0.02422384          2.422384               8403
+  number_exceedances exceedance_fraction
+1                211          0.02511008
+
+Declustering results:
+  run_length  threshold threshold_percent number_exceedances number_clusters
+1          1 0.02422384          2.422384                211             187
+2          3 0.02422384          2.422384                211             148
+3          5 0.02422384          2.422384                211             130
+4         10 0.02422384          2.422384                211              97
+  mean_cluster_size max_cluster_size extremal_index cluster_rate_per_day
+1          1.128342                5      0.8862559           0.02225396
+2          1.425676               12      0.7014218           0.01761276
+3          1.623077               14      0.6161137           0.01547067
+4          2.175258               25      0.4597156           0.01154350
+  cluster_rate_per_year
+1              5.607997
+2              4.438415
+3              3.898608
+4              2.908961
+
+Main run length: 5 
+Number of exceedances: 211 
+Number of clusters: 130 
+Extremal index estimate: 0.6161137 
+
+GPD comparison:
+                                 model observations_used       sigma        xi
+1            Chapter 4 iid exceedances               211 0.008294361 0.2932183
+2 Chapter 5 declustered cluster maxima               130 0.006859187 0.3576845
+      se_sigma     se_xi
+1 0.0009213674 0.0944041
+2 0.0009407027 0.1185425
+
+Return level comparison:
+  return_period m_trading_days chapter4_iid_percent chapter5_declustered_percent
+1        1 year            252             4.452492                     3.624556
+2       5 years           1260             7.382683                     6.052796
+3      10 years           2520             9.138103                     7.613845
+
+Shape comparison across Chapters 3, 4, and 5:
+                                    model        xi      se_xi
+1            Chapter 3 GEV monthly maxima 0.1999419 0.04329751
+2      Chapter 4 iid GPD, 97.5% threshold 0.2932183 0.09440410
+3 Chapter 5 declustered GPD, run length 5 0.3576845 0.11854254
+
+Interpretation:
+Chapter 5 accounts for dependence by grouping nearby threshold exceedances into clusters.
+The extremal index estimate is below 1 if exceedances cluster.
+The declustered GPD model uses cluster maxima rather than all exceedances.
