@@ -1,0 +1,31 @@
+"model","volatility_state","volatility_quantile","z_vol","return_period","m_trading_days","return_level_percent"
+"all exceedances volatility-dependent GPD","low volatility",0.25,-0.718298713278247,"1 year",252,2.69543784368719
+"all exceedances volatility-dependent GPD","low volatility",0.25,-0.718298713278247,"5 years",1260,3.54567012376037
+"all exceedances volatility-dependent GPD","low volatility",0.25,-0.718298713278247,"10 years",2520,3.96595748746592
+"all exceedances volatility-dependent GPD","median volatility",0.5,-0.0718587482635706,"1 year",252,3.18180387129507
+"all exceedances volatility-dependent GPD","median volatility",0.5,-0.0718587482635706,"5 years",1260,4.35483827049902
+"all exceedances volatility-dependent GPD","median volatility",0.5,-0.0718587482635706,"10 years",2520,4.93469338389804
+"all exceedances volatility-dependent GPD","high volatility",0.75,0.657529036456326,"1 year",252,4.07839835354887
+"all exceedances volatility-dependent GPD","high volatility",0.75,0.657529036456326,"5 years",1260,5.76351898263779
+"all exceedances volatility-dependent GPD","high volatility",0.75,0.657529036456326,"10 years",2520,6.59650888824883
+"all exceedances volatility-dependent GPD","crisis volatility",0.9,1.30187505519644,"1 year",252,5.31962207798365
+"all exceedances volatility-dependent GPD","crisis volatility",0.9,1.30187505519644,"5 years",1260,7.63677168713401
+"all exceedances volatility-dependent GPD","crisis volatility",0.9,1.30187505519644,"10 years",2520,8.78218656182839
+"all exceedances volatility-dependent GPD","extreme crisis volatility",0.95,1.65199526806966,"1 year",252,6.23203055934501
+"all exceedances volatility-dependent GPD","extreme crisis volatility",0.95,1.65199526806966,"5 years",1260,8.9842441430507
+"all exceedances volatility-dependent GPD","extreme crisis volatility",0.95,1.65199526806966,"10 years",2520,10.3447201195106
+"declustered cluster maxima volatility-dependent GPD","low volatility",0.25,-0.718298713278247,"1 year",252,2.46722696244579
+"declustered cluster maxima volatility-dependent GPD","low volatility",0.25,-0.718298713278247,"5 years",1260,3.26991040373651
+"declustered cluster maxima volatility-dependent GPD","low volatility",0.25,-0.718298713278247,"10 years",2520,3.68597348653859
+"declustered cluster maxima volatility-dependent GPD","median volatility",0.5,-0.0718587482635706,"1 year",252,2.86719718127143
+"declustered cluster maxima volatility-dependent GPD","median volatility",0.5,-0.0718587482635706,"5 years",1260,4.02523966160257
+"declustered cluster maxima volatility-dependent GPD","median volatility",0.5,-0.0718587482635706,"10 years",2520,4.62549961415321
+"declustered cluster maxima volatility-dependent GPD","high volatility",0.75,0.657529036456326,"1 year",252,3.66751833646782
+"declustered cluster maxima volatility-dependent GPD","high volatility",0.75,0.657529036456326,"5 years",1260,5.41658656944733
+"declustered cluster maxima volatility-dependent GPD","high volatility",0.75,0.657529036456326,"10 years",2520,6.32319891948469
+"declustered cluster maxima volatility-dependent GPD","crisis volatility",0.9,1.30187505519644,"1 year",252,4.84987482053064
+"declustered cluster maxima volatility-dependent GPD","crisis volatility",0.9,1.30187505519644,"5 years",1260,7.36249188670269
+"declustered cluster maxima volatility-dependent GPD","crisis volatility",0.9,1.30187505519644,"10 years",2520,8.66488227957246
+"declustered cluster maxima volatility-dependent GPD","extreme crisis volatility",0.95,1.65199526806966,"1 year",252,5.75468475136268
+"declustered cluster maxima volatility-dependent GPD","extreme crisis volatility",0.95,1.65199526806966,"5 years",1260,8.80978588789232
+"declustered cluster maxima volatility-dependent GPD","extreme crisis volatility",0.95,1.65199526806966,"10 years",2520,10.3933675737095

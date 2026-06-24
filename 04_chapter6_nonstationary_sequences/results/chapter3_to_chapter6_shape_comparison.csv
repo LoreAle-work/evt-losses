@@ -1,5 +1,6 @@
 "model","xi","se_xi"
-"Chapter 3 GEV monthly maxima",0.199941934375256,0.043296800663309
-"Chapter 4 stationary GPD",0.284083367952821,0.0942532853197433
-"Chapter 5 declustered GPD",0.347786176772885,0.11756542091721
-"Chapter 6 volatility-dependent GPD",0.120789269873493,0.0849300093299616
+"Chapter 3 GEV monthly maxima",0.199941934375256,0.0432972211407935
+"Chapter 4 stationary GPD",0.284013526701133,0.0942192570870768
+"Chapter 5 declustered GPD",0.347786176772885,0.117566913463251
+"Chapter 6 volatility-dependent GPD, all exceedances",0.120829404220529,0.0849351038869566
+"Chapter 6 volatility-dependent GPD, declustered cluster maxima",0.162953500831831,0.11534578777866

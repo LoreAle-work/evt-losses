@@ -11,13 +11,16 @@
 #   Chapter 5: threshold exceedances with clustering / declustering
 #   Chapter 6: threshold exceedances with covariate-dependent parameters
 #
-# In this script:
-#   - The threshold is the 97.5% empirical quantile of SPY daily losses.
-#   - The covariate is lagged 21-day realized volatility.
-#   - We fit stationary and non-stationary GPD models.
-#   - We compare models using AIC, BIC, and likelihood ratio tests.
-#   - We estimate conditional return levels under low, median, high,
-#     crisis, and extreme crisis volatility states.
+# This revised version also adds a Chapter 5-style robustness check:
+#
+#   all exceedances -> clusters -> cluster maxima -> non-stationary GPD
+#
+# Main models:
+#   1. Stationary GPD on all exceedances
+#   2. Volatility-dependent GPD on all exceedances
+#   3. Volatility + time GPD on all exceedances
+#   4. Stationary GPD on declustered cluster maxima
+#   5. Volatility-dependent GPD on declustered cluster maxima
 #
 # ============================================================
 
@@ -39,9 +42,6 @@ library(zoo)
 # 1. Project Folder Setup
 # ============================================================
 
-# Run this script from the root of your GitHub repository.
-# If needed, uncomment and modify:
-#
 setwd("~/Desktop/UNI/Projects/EVT/evt-losses")
 
 cat("Current working directory:\n")
@@ -344,8 +344,6 @@ write.csv(
   row.names = FALSE
 )
 
-# Plot predicted exceedance probability as a function of volatility.
-
 z_grid <- seq(min(df$z_vol), max(df$z_vol), length.out = 200)
 
 logit_pred <- predict(
@@ -498,6 +496,7 @@ cat("xi:", initial_xi, "\n")
 
 # ============================================================
 # 11. Fit Stationary and Non-Stationary GPD Models
+#     Using All Threshold Exceedances
 # ============================================================
 
 X_stationary <- matrix(1, nrow = length(y), ncol = 1)
@@ -517,31 +516,31 @@ fit_stationary <- fit_gpd_model(
   y = y,
   X = X_stationary,
   start_par = start_stationary,
-  model_name = "stationary GPD"
+  model_name = "stationary GPD, all exceedances"
 )
 
 fit_vol <- fit_gpd_model(
   y = y,
   X = X_vol,
   start_par = start_vol,
-  model_name = "volatility-dependent scale GPD"
+  model_name = "volatility-dependent GPD, all exceedances"
 )
 
 fit_vol_time <- fit_gpd_model(
   y = y,
   X = X_vol_time,
   start_par = start_vol_time,
-  model_name = "volatility + time scale GPD"
+  model_name = "volatility + time GPD, all exceedances"
 )
 
-cat("\nConvergence codes:\n")
+cat("\nConvergence codes, all exceedances:\n")
 cat("Stationary:", fit_stationary$convergence, "\n")
 cat("Volatility:", fit_vol$convergence, "\n")
 cat("Volatility + time:", fit_vol_time$convergence, "\n")
 
 
 # ============================================================
-# 12. Model Comparison
+# 12. Model Comparison: All Exceedances
 # ============================================================
 
 n_excess <- length(y)
@@ -557,6 +556,7 @@ model_comparison <- data.frame(
     length(fit_vol$par),
     length(fit_vol_time$par)
   ),
+  n_observations = c(n_excess, n_excess, n_excess),
   nll = c(
     fit_stationary$nll,
     fit_vol$nll,
@@ -605,8 +605,8 @@ p_vol_vs_vol_time <- pchisq(lr_vol_vs_vol_time, df = 1, lower.tail = FALSE)
 
 lr_tests <- data.frame(
   comparison = c(
-    "stationary vs volatility-dependent scale",
-    "volatility-dependent scale vs volatility + time scale"
+    "stationary vs volatility-dependent scale, all exceedances",
+    "volatility-dependent scale vs volatility + time scale, all exceedances"
   ),
   LR_statistic = c(lr_stationary_vs_vol, lr_vol_vs_vol_time),
   df = c(1, 1),
@@ -623,7 +623,7 @@ write.csv(
 
 
 # ============================================================
-# 13. Parameter Tables
+# 13. Parameter Tables: All Exceedances
 # ============================================================
 
 make_parameter_table <- function(fit, parameter_names) {
@@ -813,6 +813,7 @@ resid_vol_time <- save_custom_gpd_diagnostics(
 
 # ============================================================
 # 16. Conditional Return Levels with Crisis Volatility Scenarios
+#     Main Model: All Exceedances
 # ============================================================
 
 gpd_return_level <- function(m, u, sigma, xi, zeta) {
@@ -830,16 +831,6 @@ gpd_return_level <- function(m, u, sigma, xi, zeta) {
   return(x_m)
 }
 
-# Volatility scenarios:
-#   25th percentile = low volatility
-#   50th percentile = median volatility
-#   75th percentile = high volatility
-#   90th percentile = crisis volatility
-#   95th percentile = extreme crisis volatility
-#
-# The 90th and 95th percentiles are important because the 75th percentile
-# is high, but not necessarily crisis-level high.
-
 vol_scenario_probs <- c(0.25, 0.50, 0.75, 0.90, 0.95)
 
 vol_scenarios <- data.frame(
@@ -854,15 +845,11 @@ vol_scenarios <- data.frame(
   z_vol = as.numeric(quantile(df$z_vol, vol_scenario_probs, names = FALSE))
 )
 
-# Predicted threshold exceedance probability from logistic model.
-
 vol_scenarios$zeta_hat <- predict(
   logit_vol,
   newdata = vol_scenarios,
   type = "response"
 )
-
-# Predicted GPD scale from volatility-dependent GPD model.
 
 vol_scenarios$sigma_hat <- exp(
   fit_vol$beta[1] + fit_vol$beta[2] * vol_scenarios$z_vol
@@ -887,6 +874,7 @@ conditional_return_levels <- do.call(
     )
     
     data.frame(
+      model = "all exceedances volatility-dependent GPD",
       volatility_state = vol_scenarios$volatility_state[i],
       volatility_quantile = vol_scenarios$volatility_quantile[i],
       z_vol = vol_scenarios$z_vol[i],
@@ -921,7 +909,7 @@ stationary_xi <- fit_stationary$xi
 stationary_zeta <- mean(df$exceed)
 
 stationary_return_levels <- data.frame(
-  model = "stationary GPD",
+  model = "stationary GPD, all exceedances",
   return_period = return_labels,
   m_trading_days = return_periods_days,
   return_level_decimal = sapply(
@@ -941,8 +929,6 @@ write.csv(
   file.path(res_dir, "stationary_return_levels.csv"),
   row.names = FALSE
 )
-
-# Plot conditional return levels for all five volatility states.
 
 plot_years <- c(1, 5, 10)
 
@@ -991,7 +977,6 @@ legend(
 
 dev.off()
 
-# Plot stationary return levels against conditional crisis scenarios.
 
 png(file.path(fig_dir, "stationary_vs_conditional_return_levels.png"), width = 1000, height = 650)
 
@@ -1039,22 +1024,27 @@ dev.off()
 
 
 # ============================================================
-# 17. Chapter 3, 4, 5, 6 Shape Comparison
+# 17. Chapter 5 Runs Declustering Robustness Extension
 # ============================================================
 
-monthly_max_losses <- apply.monthly(losses, max)
-monthly_max_losses_num <- as.numeric(monthly_max_losses)
+# This section imports the Chapter 5 logic into Chapter 6.
+#
+# Instead of fitting the non-stationary GPD to all exceedances,
+# we first group nearby exceedances into clusters.
+#
+# Then we keep only the maximum loss in each cluster and fit:
+#
+#   cluster maxima excesses -> non-stationary GPD with volatility
+#
+# This checks whether the volatility effect remains after accounting
+# for clustering of extremes.
 
-capture.output(
-  gev_ch3 <- gev.fit(monthly_max_losses_num)
-)
-
-decluster_runs_simple <- function(x, threshold, run_length = 5) {
+decluster_runs_with_covariates <- function(data, threshold, run_length = 5) {
   
-  exceedance_indices <- which(x > threshold)
+  exceedance_indices <- which(data$loss > threshold)
   
   if (length(exceedance_indices) == 0) {
-    return(numeric(0))
+    return(list(exceedance_data = data.frame(), cluster_summary = data.frame()))
   }
   
   cluster_id <- 1
@@ -1072,21 +1062,542 @@ decluster_runs_simple <- function(x, threshold, run_length = 5) {
     cluster_ids[i] <- cluster_id
   }
   
-  exceedance_losses <- x[exceedance_indices]
+  exceedance_data <- data[exceedance_indices, ]
+  exceedance_data$index <- exceedance_indices
+  exceedance_data$cluster_id <- cluster_ids
+  exceedance_data$excess <- exceedance_data$loss - threshold
   
-  cluster_maxima <- tapply(
-    exceedance_losses,
-    cluster_ids,
-    max
+  cluster_list <- split(exceedance_data, exceedance_data$cluster_id)
+  
+  cluster_summary <- do.call(
+    rbind,
+    lapply(cluster_list, function(cluster_df) {
+      
+      max_row <- cluster_df[which.max(cluster_df$loss), ]
+      
+      data.frame(
+        cluster_id = unique(cluster_df$cluster_id),
+        start_index = min(cluster_df$index),
+        end_index = max(cluster_df$index),
+        start_date = min(cluster_df$date),
+        end_date = max(cluster_df$date),
+        cluster_size = nrow(cluster_df),
+        cluster_duration_trading_days = max(cluster_df$index) - min(cluster_df$index) + 1,
+        cluster_max_loss = max_row$loss,
+        cluster_max_excess = max_row$loss - threshold,
+        cluster_max_date = max_row$date,
+        z_vol_at_cluster_max = max_row$z_vol,
+        t_scaled_at_cluster_max = max_row$t_scaled,
+        rv21_lag_at_cluster_max = max_row$rv21_lag
+      )
+    })
   )
   
-  return(as.numeric(cluster_maxima))
+  row.names(cluster_summary) <- NULL
+  
+  return(list(
+    exceedance_data = exceedance_data,
+    cluster_summary = cluster_summary
+  ))
 }
 
-cluster_maxima <- decluster_runs_simple(df$loss, threshold = u, run_length = 5)
+main_run_length <- 5
+
+declustered <- decluster_runs_with_covariates(
+  data = df,
+  threshold = u,
+  run_length = main_run_length
+)
+
+cluster_summary <- declustered$cluster_summary
+cluster_exceedance_data <- declustered$exceedance_data
+
+n_clusters <- nrow(cluster_summary)
+theta_hat <- n_clusters / n_exceedances
+
+cat("\nDeclustering robustness summary:\n")
+cat("Run length:", main_run_length, "\n")
+cat("Raw exceedances:", n_exceedances, "\n")
+cat("Clusters:", n_clusters, "\n")
+cat("Extremal index:", theta_hat, "\n")
+
+declustering_ch6_summary <- data.frame(
+  run_length = main_run_length,
+  threshold = u,
+  threshold_percent = 100 * u,
+  raw_exceedances = n_exceedances,
+  clusters = n_clusters,
+  extremal_index = theta_hat,
+  mean_cluster_size = mean(cluster_summary$cluster_size),
+  max_cluster_size = max(cluster_summary$cluster_size),
+  cluster_rate_per_day = n_clusters / n_total,
+  cluster_rate_per_year = 252 * n_clusters / n_total
+)
+
+print(declustering_ch6_summary)
+
+write.csv(
+  declustering_ch6_summary,
+  file.path(res_dir, "chapter6_declustering_summary.csv"),
+  row.names = FALSE
+)
+
+write.csv(
+  cluster_summary,
+  file.path(res_dir, "chapter6_clusters_run_length_5.csv"),
+  row.names = FALSE
+)
+
+# Plot declustered exceedances and cluster maxima.
+
+png(file.path(fig_dir, "chapter6_declustered_cluster_maxima.png"), width = 1100, height = 650)
+
+plot(
+  df$date,
+  df$loss,
+  type = "h",
+  lwd = 0.5,
+  col = "gray70",
+  ylim = c(0, max(df$loss) * 1.05),
+  main = "Chapter 6 Declustered Cluster Maxima, Run Length = 5",
+  xlab = "Date",
+  ylab = "Daily Loss"
+)
+
+abline(h = u, col = "red", lwd = 3, lty = 2)
+
+points(
+  cluster_exceedance_data$date,
+  cluster_exceedance_data$loss,
+  pch = 20,
+  col = "gray30"
+)
+
+points(
+  cluster_summary$cluster_max_date,
+  cluster_summary$cluster_max_loss,
+  pch = 19,
+  col = "blue"
+)
+
+legend(
+  "topright",
+  legend = c("97.5% threshold", "Raw exceedances", "Cluster maxima"),
+  col = c("red", "gray30", "blue"),
+  lty = c(2, NA, NA),
+  lwd = c(3, NA, NA),
+  pch = c(NA, 20, 19),
+  bty = "n"
+)
+
+dev.off()
+
+
+# ============================================================
+# 18. Non-Stationary GPD on Declustered Cluster Maxima
+# ============================================================
+
+# Cluster maxima excesses:
+#
+# Y_j = C_j - u
+#
+# where C_j is the maximum loss in cluster j.
+
+y_cluster <- cluster_summary$cluster_max_excess
+z_cluster <- cluster_summary$z_vol_at_cluster_max
+t_cluster <- cluster_summary$t_scaled_at_cluster_max
+
+# Initial stationary GPD fit to cluster maxima.
 
 capture.output(
-  gpd_ch5_cluster <- gpd.fit(cluster_maxima, threshold = u)
+  initial_gpd_cluster <- gpd.fit(cluster_summary$cluster_max_loss, threshold = u)
+)
+
+initial_cluster_sigma <- initial_gpd_cluster$mle[1]
+initial_cluster_xi <- initial_gpd_cluster$mle[2]
+
+X_cluster_stationary <- matrix(1, nrow = length(y_cluster), ncol = 1)
+colnames(X_cluster_stationary) <- "intercept"
+
+X_cluster_vol <- cbind(1, z_cluster)
+colnames(X_cluster_vol) <- c("intercept", "z_vol")
+
+start_cluster_stationary <- c(log(initial_cluster_sigma), initial_cluster_xi)
+start_cluster_vol <- c(log(initial_cluster_sigma), 0, initial_cluster_xi)
+
+fit_cluster_stationary <- fit_gpd_model(
+  y = y_cluster,
+  X = X_cluster_stationary,
+  start_par = start_cluster_stationary,
+  model_name = "stationary GPD, declustered cluster maxima"
+)
+
+fit_cluster_vol <- fit_gpd_model(
+  y = y_cluster,
+  X = X_cluster_vol,
+  start_par = start_cluster_vol,
+  model_name = "volatility-dependent GPD, declustered cluster maxima"
+)
+
+cat("\nConvergence codes, declustered cluster maxima:\n")
+cat("Cluster stationary:", fit_cluster_stationary$convergence, "\n")
+cat("Cluster volatility:", fit_cluster_vol$convergence, "\n")
+
+n_cluster_excess <- length(y_cluster)
+
+cluster_model_comparison <- data.frame(
+  model = c(
+    fit_cluster_stationary$model_name,
+    fit_cluster_vol$model_name
+  ),
+  n_parameters = c(
+    length(fit_cluster_stationary$par),
+    length(fit_cluster_vol$par)
+  ),
+  n_observations = c(n_cluster_excess, n_cluster_excess),
+  nll = c(
+    fit_cluster_stationary$nll,
+    fit_cluster_vol$nll
+  ),
+  AIC = c(
+    2 * length(fit_cluster_stationary$par) + 2 * fit_cluster_stationary$nll,
+    2 * length(fit_cluster_vol$par) + 2 * fit_cluster_vol$nll
+  ),
+  BIC = c(
+    log(n_cluster_excess) * length(fit_cluster_stationary$par) + 2 * fit_cluster_stationary$nll,
+    log(n_cluster_excess) * length(fit_cluster_vol$par) + 2 * fit_cluster_vol$nll
+  ),
+  xi = c(
+    fit_cluster_stationary$xi,
+    fit_cluster_vol$xi
+  ),
+  se_xi = c(
+    fit_cluster_stationary$se_xi,
+    fit_cluster_vol$se_xi
+  ),
+  convergence = c(
+    fit_cluster_stationary$convergence,
+    fit_cluster_vol$convergence
+  )
+)
+
+print(cluster_model_comparison)
+
+write.csv(
+  cluster_model_comparison,
+  file.path(res_dir, "cluster_maxima_nonstationary_model_comparison.csv"),
+  row.names = FALSE
+)
+
+cluster_lr_stat <- 2 * (fit_cluster_stationary$nll - fit_cluster_vol$nll)
+cluster_lr_p_value <- pchisq(cluster_lr_stat, df = 1, lower.tail = FALSE)
+
+cluster_lr_test <- data.frame(
+  comparison = "stationary vs volatility-dependent scale, declustered cluster maxima",
+  LR_statistic = cluster_lr_stat,
+  df = 1,
+  p_value = cluster_lr_p_value
+)
+
+print(cluster_lr_test)
+
+write.csv(
+  cluster_lr_test,
+  file.path(res_dir, "cluster_maxima_likelihood_ratio_test.csv"),
+  row.names = FALSE
+)
+
+cluster_parameter_table <- rbind(
+  make_parameter_table(fit_cluster_stationary, c("beta_0", "xi")),
+  make_parameter_table(fit_cluster_vol, c("beta_0", "beta_vol", "xi"))
+)
+
+print(cluster_parameter_table)
+
+write.csv(
+  cluster_parameter_table,
+  file.path(res_dir, "cluster_maxima_parameter_estimates.csv"),
+  row.names = FALSE
+)
+
+
+# Diagnostics for declustered cluster maxima models.
+
+resid_cluster_stationary <- save_custom_gpd_diagnostics(
+  fit_cluster_stationary,
+  file.path(fig_dir, "diagnostics_cluster_stationary_gpd.png"),
+  "Cluster Stationary GPD"
+)
+
+resid_cluster_vol <- save_custom_gpd_diagnostics(
+  fit_cluster_vol,
+  file.path(fig_dir, "diagnostics_cluster_volatility_gpd.png"),
+  "Cluster Volatility GPD"
+)
+
+
+# ============================================================
+# 19. Conditional Return Levels:
+#     Declustered Cluster Maxima Robustness
+# ============================================================
+
+# For the declustered model, the event rate is the cluster rate,
+# not the raw exceedance rate.
+#
+# We approximate the cluster probability by:
+#
+#   cluster_rate(z) = theta_hat * P(raw exceedance | z)
+#
+# where theta_hat is the runs estimate of the extremal index.
+#
+# This is a simple and transparent robustness approximation.
+# It keeps the volatility-dependent exceedance probability but adjusts
+# it downward to reflect clustering.
+
+cluster_vol_scenarios <- vol_scenarios
+
+cluster_vol_scenarios$raw_zeta_hat <- cluster_vol_scenarios$zeta_hat
+cluster_vol_scenarios$cluster_zeta_hat <- theta_hat * cluster_vol_scenarios$raw_zeta_hat
+
+cluster_vol_scenarios$cluster_sigma_hat <- exp(
+  fit_cluster_vol$beta[1] + fit_cluster_vol$beta[2] * cluster_vol_scenarios$z_vol
+)
+
+cluster_vol_scenarios$cluster_xi_hat <- fit_cluster_vol$xi
+
+cluster_conditional_return_levels <- do.call(
+  rbind,
+  lapply(seq_len(nrow(cluster_vol_scenarios)), function(i) {
+    
+    levels <- sapply(
+      return_periods_days,
+      gpd_return_level,
+      u = u,
+      sigma = cluster_vol_scenarios$cluster_sigma_hat[i],
+      xi = cluster_vol_scenarios$cluster_xi_hat[i],
+      zeta = cluster_vol_scenarios$cluster_zeta_hat[i]
+    )
+    
+    data.frame(
+      model = "declustered cluster maxima volatility-dependent GPD",
+      volatility_state = cluster_vol_scenarios$volatility_state[i],
+      volatility_quantile = cluster_vol_scenarios$volatility_quantile[i],
+      z_vol = cluster_vol_scenarios$z_vol[i],
+      raw_zeta_hat = cluster_vol_scenarios$raw_zeta_hat[i],
+      cluster_zeta_hat = cluster_vol_scenarios$cluster_zeta_hat[i],
+      sigma_hat = cluster_vol_scenarios$cluster_sigma_hat[i],
+      xi_hat = cluster_vol_scenarios$cluster_xi_hat[i],
+      return_period = return_labels,
+      m_trading_days = return_periods_days,
+      return_level_decimal = as.numeric(levels),
+      return_level_percent = 100 * as.numeric(levels)
+    )
+  })
+)
+
+print(cluster_vol_scenarios)
+print(cluster_conditional_return_levels)
+
+write.csv(
+  cluster_vol_scenarios,
+  file.path(res_dir, "cluster_volatility_scenarios.csv"),
+  row.names = FALSE
+)
+
+write.csv(
+  cluster_conditional_return_levels,
+  file.path(res_dir, "cluster_conditional_return_levels_by_volatility.csv"),
+  row.names = FALSE
+)
+
+# Compare all-exceedance vs declustered conditional return levels.
+
+combined_conditional_return_levels <- rbind(
+  conditional_return_levels[, c(
+    "model",
+    "volatility_state",
+    "volatility_quantile",
+    "z_vol",
+    "return_period",
+    "m_trading_days",
+    "return_level_percent"
+  )],
+  cluster_conditional_return_levels[, c(
+    "model",
+    "volatility_state",
+    "volatility_quantile",
+    "z_vol",
+    "return_period",
+    "m_trading_days",
+    "return_level_percent"
+  )]
+)
+
+write.csv(
+  combined_conditional_return_levels,
+  file.path(res_dir, "combined_conditional_return_levels_all_vs_cluster.csv"),
+  row.names = FALSE
+)
+
+# Plot 10-year conditional return levels across volatility states.
+
+ten_year_all <- conditional_return_levels[
+  conditional_return_levels$return_period == "10 years",
+]
+
+ten_year_cluster <- cluster_conditional_return_levels[
+  cluster_conditional_return_levels$return_period == "10 years",
+]
+
+png(file.path(fig_dir, "ten_year_return_levels_all_vs_cluster.png"), width = 1000, height = 650)
+
+plot(
+  vol_scenarios$volatility_quantile,
+  ten_year_all$return_level_percent,
+  type = "b",
+  pch = 19,
+  col = "black",
+  ylim = range(
+    ten_year_all$return_level_percent,
+    ten_year_cluster$return_level_percent,
+    na.rm = TRUE
+  ),
+  xlab = "Volatility Quantile",
+  ylab = "10-Year Return Level (%)",
+  main = "10-Year Conditional Return Levels: All vs Declustered"
+)
+
+lines(
+  vol_scenarios$volatility_quantile,
+  ten_year_cluster$return_level_percent,
+  type = "b",
+  pch = 17,
+  col = "blue"
+)
+
+legend(
+  "topleft",
+  legend = c("All exceedances", "Declustered cluster maxima"),
+  col = c("black", "blue"),
+  pch = c(19, 17),
+  lty = 1,
+  bty = "n"
+)
+
+dev.off()
+
+
+# ============================================================
+# 20. Main Model vs Declustered Robustness Summary
+# ============================================================
+
+main_vs_cluster_model_summary <- data.frame(
+  model = c(
+    "all exceedances stationary GPD",
+    "all exceedances volatility-dependent GPD",
+    "cluster maxima stationary GPD",
+    "cluster maxima volatility-dependent GPD"
+  ),
+  observations_used = c(
+    length(y),
+    length(y),
+    length(y_cluster),
+    length(y_cluster)
+  ),
+  xi = c(
+    fit_stationary$xi,
+    fit_vol$xi,
+    fit_cluster_stationary$xi,
+    fit_cluster_vol$xi
+  ),
+  se_xi = c(
+    fit_stationary$se_xi,
+    fit_vol$se_xi,
+    fit_cluster_stationary$se_xi,
+    fit_cluster_vol$se_xi
+  ),
+  beta_vol = c(
+    NA,
+    fit_vol$beta[2],
+    NA,
+    fit_cluster_vol$beta[2]
+  ),
+  se_beta_vol = c(
+    NA,
+    fit_vol$se_beta[2],
+    NA,
+    fit_cluster_vol$se_beta[2]
+  ),
+  AIC = c(
+    model_comparison$AIC[1],
+    model_comparison$AIC[2],
+    cluster_model_comparison$AIC[1],
+    cluster_model_comparison$AIC[2]
+  ),
+  BIC = c(
+    model_comparison$BIC[1],
+    model_comparison$BIC[2],
+    cluster_model_comparison$BIC[1],
+    cluster_model_comparison$BIC[2]
+  )
+)
+
+print(main_vs_cluster_model_summary)
+
+write.csv(
+  main_vs_cluster_model_summary,
+  file.path(res_dir, "main_vs_declustered_nonstationary_summary.csv"),
+  row.names = FALSE
+)
+
+png(file.path(fig_dir, "main_vs_declustered_shape_comparison.png"), width = 900, height = 600)
+
+barplot(
+  main_vs_cluster_model_summary$xi,
+  names.arg = c("All stat.", "All vol.", "Clust stat.", "Clust vol."),
+  ylab = expression(hat(xi)),
+  main = "Shape Parameter: All Exceedances vs Declustered",
+  ylim = c(
+    0,
+    max(
+      main_vs_cluster_model_summary$xi + main_vs_cluster_model_summary$se_xi,
+      na.rm = TRUE
+    ) * 1.4
+  )
+)
+
+abline(h = 0, lty = 2, col = "red")
+
+dev.off()
+
+
+png(file.path(fig_dir, "main_vs_declustered_beta_vol_comparison.png"), width = 900, height = 600)
+
+barplot(
+  c(fit_vol$beta[2], fit_cluster_vol$beta[2]),
+  names.arg = c("All exceedances", "Cluster maxima"),
+  ylab = expression(hat(beta)[vol]),
+  main = "Volatility Coefficient: All vs Declustered"
+)
+
+abline(h = 0, lty = 2, col = "red")
+
+dev.off()
+
+
+# ============================================================
+# 21. Chapter 3, 4, 5, 6 Shape Comparison
+# ============================================================
+
+monthly_max_losses <- apply.monthly(losses, max)
+monthly_max_losses_num <- as.numeric(monthly_max_losses)
+
+capture.output(
+  gev_ch3 <- gev.fit(monthly_max_losses_num)
+)
+
+capture.output(
+  gpd_ch5_cluster <- gpd.fit(cluster_summary$cluster_max_loss, threshold = u)
 )
 
 chapter_shape_comparison <- data.frame(
@@ -1094,19 +1605,22 @@ chapter_shape_comparison <- data.frame(
     "Chapter 3 GEV monthly maxima",
     "Chapter 4 stationary GPD",
     "Chapter 5 declustered GPD",
-    "Chapter 6 volatility-dependent GPD"
+    "Chapter 6 volatility-dependent GPD, all exceedances",
+    "Chapter 6 volatility-dependent GPD, declustered cluster maxima"
   ),
   xi = c(
     gev_ch3$mle[3],
     fit_stationary$xi,
     gpd_ch5_cluster$mle[2],
-    fit_vol$xi
+    fit_vol$xi,
+    fit_cluster_vol$xi
   ),
   se_xi = c(
     gev_ch3$se[3],
     fit_stationary$se_xi,
     gpd_ch5_cluster$se[2],
-    fit_vol$se_xi
+    fit_vol$se_xi,
+    fit_cluster_vol$se_xi
   )
 )
 
@@ -1118,11 +1632,11 @@ write.csv(
   row.names = FALSE
 )
 
-png(file.path(fig_dir, "chapter3_to_chapter6_shape_comparison.png"), width = 900, height = 600)
+png(file.path(fig_dir, "chapter3_to_chapter6_shape_comparison.png"), width = 1000, height = 650)
 
 barplot(
   chapter_shape_comparison$xi,
-  names.arg = c("Ch3", "Ch4", "Ch5", "Ch6"),
+  names.arg = c("Ch3", "Ch4", "Ch5", "Ch6 all", "Ch6 clust."),
   ylab = expression(hat(xi)),
   main = "Shape Parameter Comparison Across Chapters",
   ylim = c(0, max(chapter_shape_comparison$xi + chapter_shape_comparison$se_xi, na.rm = TRUE) * 1.4)
@@ -1134,7 +1648,7 @@ dev.off()
 
 
 # ============================================================
-# 18. Save Summary Files
+# 22. Save Summary Files
 # ============================================================
 
 sink(file.path(res_dir, "chapter6_model_summary.txt"))
@@ -1161,28 +1675,52 @@ cat("Logistic volatility coefficients:\n")
 print(logit_vol_coefficients)
 cat("\n")
 
-cat("GPD non-stationary model comparison:\n")
+cat("GPD non-stationary model comparison, all exceedances:\n")
 print(model_comparison)
 cat("\n")
 
-cat("Likelihood ratio tests:\n")
+cat("Likelihood ratio tests, all exceedances:\n")
 print(lr_tests)
 cat("\n")
 
-cat("GPD parameter estimates:\n")
+cat("GPD parameter estimates, all exceedances:\n")
 print(parameter_table)
 cat("\n")
 
-cat("Volatility scenarios:\n")
+cat("Volatility scenarios, all exceedances:\n")
 print(vol_scenarios)
 cat("\n")
 
-cat("Conditional return levels:\n")
+cat("Conditional return levels, all exceedances:\n")
 print(conditional_return_levels)
 cat("\n")
 
-cat("Stationary return levels:\n")
+cat("Stationary return levels, all exceedances:\n")
 print(stationary_return_levels)
+cat("\n")
+
+cat("Declustering robustness summary:\n")
+print(declustering_ch6_summary)
+cat("\n")
+
+cat("Cluster maxima non-stationary model comparison:\n")
+print(cluster_model_comparison)
+cat("\n")
+
+cat("Cluster maxima likelihood ratio test:\n")
+print(cluster_lr_test)
+cat("\n")
+
+cat("Cluster maxima parameter estimates:\n")
+print(cluster_parameter_table)
+cat("\n")
+
+cat("Cluster conditional return levels:\n")
+print(cluster_conditional_return_levels)
+cat("\n")
+
+cat("Main vs declustered non-stationary summary:\n")
+print(main_vs_cluster_model_summary)
 cat("\n")
 
 cat("Chapter 3 to Chapter 6 shape comparison:\n")
@@ -1190,11 +1728,10 @@ print(chapter_shape_comparison)
 cat("\n")
 
 cat("Interpretation guide:\n")
-cat("If the volatility-dependent scale model improves AIC/BIC or likelihood,\n")
-cat("then there is evidence that exceedance severity changes with volatility.\n")
-cat("If beta_vol is positive, fitted GPD scale increases in high-volatility periods.\n")
-cat("Positive xi estimates continue to support heavy-tailed losses.\n")
-cat("The 90th and 95th percentile volatility states are crisis scenarios.\n")
+cat("The main Chapter 6 model uses all threshold exceedances and allows GPD scale to depend on volatility.\n")
+cat("The robustness extension first applies Chapter 5 runs declustering and then fits a non-stationary GPD to cluster maxima.\n")
+cat("If the volatility coefficient remains positive after declustering, volatility affects the severity of independent extreme episodes.\n")
+cat("If the volatility effect weakens after declustering, part of the all-exceedance effect may reflect clustered crisis periods.\n")
 
 sink()
 
@@ -1204,32 +1741,46 @@ sink()
 
 
 # ============================================================
-# 19. Final Console Summary
+# 23. Final Console Summary
 # ============================================================
 
 cat("\n================ CHAPTER 6 SUMMARY ================\n")
 cat("Non-stationary EVT analysis completed.\n\n")
 
 cat("Threshold:", round(100 * u, 3), "%\n")
-cat("Number of exceedances:", n_exceedances, "\n\n")
+cat("Number of raw exceedances:", n_exceedances, "\n")
+cat("Number of declustered clusters:", n_clusters, "\n")
+cat("Extremal index estimate:", round(theta_hat, 4), "\n\n")
 
 cat("Logistic exceedance model comparison:\n")
 print(logit_model_comparison)
 
-cat("\nGPD model comparison:\n")
+cat("\nGPD model comparison, all exceedances:\n")
 print(model_comparison)
 
-cat("\nLikelihood ratio tests:\n")
+cat("\nLikelihood ratio tests, all exceedances:\n")
 print(lr_tests)
 
-cat("\nVolatility scenarios:\n")
+cat("\nVolatility scenarios, all exceedances:\n")
 print(vol_scenarios)
 
-cat("\nConditional return levels:\n")
+cat("\nConditional return levels, all exceedances:\n")
 print(conditional_return_levels)
 
-cat("\nStationary return levels:\n")
+cat("\nStationary return levels, all exceedances:\n")
 print(stationary_return_levels)
+
+cat("\nCluster maxima model comparison:\n")
+print(cluster_model_comparison)
+
+cat("\nCluster maxima likelihood ratio test:\n")
+print(cluster_lr_test)
+
+cat("\nCluster conditional return levels:\n")
+print(cluster_conditional_return_levels)
+
+cat("\nMain vs declustered non-stationary summary:\n")
+print(main_vs_cluster_model_summary)
 
 cat("\nChapter 3 to Chapter 6 shape comparison:\n")
 print(chapter_shape_comparison)

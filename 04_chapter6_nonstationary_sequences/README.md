@@ -18,6 +18,7 @@ The main questions are:
 - Does the severity of threshold exceedances depend on volatility?
 - Does a non-stationary GPD model fit better than a stationary GPD model?
 - Do return levels change between low-volatility and crisis-volatility states?
+- Does the volatility effect survive after accounting for clustering?
 - Is the heavy-tail conclusion from Chapters 3, 4, and 5 still present after accounting for volatility?
 
 ## Data
@@ -171,7 +172,9 @@ $$
 The main logistic model is:
 
 $$
-\operatorname{logit}(P(L_t > u)) = \alpha_0 + \alpha_1 z_t
+\log \left( \frac{P(L_t > u)}{1 - P(L_t > u)} \right)
+=
+\alpha_0 + \alpha_1 z_t
 $$
 
 If alpha<sub>1</sub> is positive, high-volatility periods have a higher probability of producing threshold exceedances.
@@ -246,15 +249,15 @@ $$
 
 The script estimates the models using `optim` in R.
 
-## GPD Model Comparison
+## GPD Model Comparison: All Exceedances
 
-The stationary GPD model is compared with two non-stationary alternatives.
+The stationary GPD model is compared with two non-stationary alternatives using all threshold exceedances.
 
-| Model | Parameters | AIC | BIC | xi |
-|---|---:|---:|---:|---:|
-| Stationary GPD | 2 | -1462.22 | -1455.53 | 0.2841 |
-| Volatility-dependent scale GPD | 3 | -1492.75 | -1482.71 | 0.1208 |
-| Volatility + time scale GPD | 4 | -1493.60 | -1480.22 | 0.1299 |
+| Model | Parameters | Observations | AIC | BIC | xi |
+|---|---:|---:|---:|---:|---:|
+| Stationary GPD, all exceedances | 2 | 210 | -1462.23 | -1455.54 | 0.2840 |
+| Volatility-dependent GPD, all exceedances | 3 | 210 | -1492.76 | -1482.72 | 0.1208 |
+| Volatility + time GPD, all exceedances | 4 | 210 | -1493.62 | -1480.23 | 0.1299 |
 
 The volatility-dependent scale model substantially improves over the stationary model.
 
@@ -333,8 +336,7 @@ The 90th and 95th percentile scenarios are included because the 75th percentile 
 For a return period m, the conditional return level is:
 
 $$
-x_m(z)
-=
+x_m(z) =
 u +
 \frac{\sigma(z)}{\xi}
 \left[
@@ -371,7 +373,7 @@ The fitted volatility scenarios are:
 
 Both the exceedance probability and the fitted GPD scale increase strongly with volatility.
 
-## Conditional Return Level Results
+## Conditional Return Level Results: All Exceedances
 
 Using the volatility-dependent exceedance probability and volatility-dependent GPD scale model, the estimated return levels are:
 
@@ -395,7 +397,7 @@ The stationary GPD model estimates fixed return levels:
 
 | Model | 1-year | 5-year | 10-year |
 |---|---:|---:|---:|
-| Stationary GPD | 4.46% | 7.37% | 9.09% |
+| Stationary GPD, all exceedances | 4.46% | 7.37% | 9.09% |
 
 The stationary 10-year return level is about **9.09%**.
 
@@ -413,6 +415,127 @@ Once 90th and 95th percentile volatility states are included, the crisis-state r
 This clarifies the interpretation:
 
 > The stationary model averages across calm and crisis periods, while the non-stationary model gives conditional risk estimates depending on volatility.
+
+## Robustness: Combining Chapter 5 Declustering with Chapter 6 Non-Stationarity
+
+Chapter 5 showed that threshold exceedances cluster over time.
+
+To check whether the Chapter 6 volatility effect is only driven by repeated exceedances inside crisis periods, this chapter adds a robustness model using Chapter 5-style runs declustering.
+
+Runs declustering is applied with run length 5. Nearby exceedances are grouped into clusters, and only the maximum loss from each cluster is retained.
+
+The declustering summary is:
+
+| Quantity | Value |
+|---|---:|
+| Run length | 5 |
+| Raw exceedances | 210 |
+| Clusters | 129 |
+| Extremal index | 0.6143 |
+| Mean cluster size | 1.6279 |
+| Max cluster size | 14 |
+| Cluster rate per year | 3.8774 |
+
+The extremal index is clearly below 1, confirming that extreme losses cluster even in the Chapter 6 sample.
+
+The declustered robustness model fits a non-stationary GPD to the cluster maxima.
+
+Let C<sub>j</sub> be the maximum loss in cluster j. The cluster excess is:
+
+$$
+Y_j = C_j - u
+$$
+
+The volatility-dependent cluster-maxima model is:
+
+$$
+Y_j \sim GPD(\sigma_j, \xi)
+$$
+
+with:
+
+$$
+\log(\sigma_j) = \beta_0 + \beta_1 z_j
+$$
+
+where z<sub>j</sub> is lagged volatility on the date of the cluster maximum.
+
+## Declustered Cluster-Maxima Model Results
+
+The comparison between stationary and volatility-dependent GPD models for declustered cluster maxima is:
+
+| Model | Parameters | Observations | AIC | BIC | xi |
+|---|---:|---:|---:|---:|---:|
+| Stationary GPD, cluster maxima | 2 | 129 | -928.04 | -922.32 | 0.3478 |
+| Volatility-dependent GPD, cluster maxima | 3 | 129 | -942.53 | -933.95 | 0.1630 |
+
+The volatility-dependent cluster-maxima model improves both AIC and BIC.
+
+The likelihood ratio test gives:
+
+$$
+LR = 16.49
+$$
+
+with p-value:
+
+$$
+p \approx 4.90 \times 10^{-5}
+$$
+
+The estimated volatility coefficient is:
+
+$$
+\hat{\beta}_{vol} = 0.4041
+$$
+
+with standard error:
+
+$$
+0.0900
+$$
+
+This coefficient is positive and statistically meaningful.
+
+Therefore, volatility remains important even after accounting for clustering. This suggests that the Chapter 6 volatility effect is not only caused by repeated exceedances inside crisis episodes. Volatility also affects the severity of independent extreme-loss episodes.
+
+## Main Model vs Declustered Robustness
+
+The main all-exceedance model and the declustered cluster-maxima robustness model are compared below.
+
+| Model | Observations | xi | SE(xi) | beta_vol | SE(beta_vol) | AIC | BIC |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| All exceedances stationary GPD | 210 | 0.2840 | 0.0942 | NA | NA | -1462.23 | -1455.54 |
+| All exceedances volatility GPD | 210 | 0.1208 | 0.0849 | 0.3771 | 0.0628 | -1492.76 | -1482.72 |
+| Cluster maxima stationary GPD | 129 | 0.3478 | 0.1187 | NA | NA | -928.04 | -922.32 |
+| Cluster maxima volatility GPD | 129 | 0.1630 | 0.1153 | 0.4041 | 0.0900 | -942.53 | -933.95 |
+
+In both the all-exceedance model and the declustered cluster-maxima model, adding volatility improves the model.
+
+The volatility coefficient is also similar across the two non-stationary models:
+
+| Model | beta_vol |
+|---|---:|
+| All exceedances volatility GPD | 0.3771 |
+| Cluster maxima volatility GPD | 0.4041 |
+
+This supports the robustness of the volatility effect.
+
+## Return Level Robustness
+
+The estimated 10-year return levels from the main model and the declustered robustness model are:
+
+| Volatility state | All exceedances | Declustered cluster maxima |
+|---|---:|---:|
+| Low volatility | 3.97% | 3.69% |
+| Median volatility | 4.93% | 4.63% |
+| High volatility | 6.60% | 6.32% |
+| Crisis volatility | 8.78% | 8.66% |
+| Extreme crisis volatility | 10.34% | 10.39% |
+
+The crisis-volatility return levels are very similar after declustering.
+
+This suggests that the main Chapter 6 conditional return level results are not driven only by clustered repeated exceedances.
 
 ## Diagnostics
 
@@ -439,6 +562,8 @@ Diagnostics are saved for:
 - stationary GPD
 - volatility-dependent GPD
 - volatility + time GPD
+- stationary GPD on declustered cluster maxima
+- volatility-dependent GPD on declustered cluster maxima
 
 ## Comparison with Previous Chapters
 
@@ -456,15 +581,16 @@ The estimated shape parameters are:
 | Chapter | Model | xi | SE(xi) |
 |---|---|---:|---:|
 | Chapter 3 | GEV monthly maxima | 0.1999 | 0.0433 |
-| Chapter 4 | Stationary GPD | 0.2841 | 0.0943 |
+| Chapter 4 | Stationary GPD | 0.2840 | 0.0942 |
 | Chapter 5 | Declustered GPD | 0.3478 | 0.1176 |
-| Chapter 6 | Volatility-dependent GPD | 0.1208 | 0.0849 |
+| Chapter 6 | Volatility-dependent GPD, all exceedances | 0.1208 | 0.0849 |
+| Chapter 6 | Volatility-dependent GPD, declustered cluster maxima | 0.1630 | 0.1153 |
 
-The Chapter 6 shape estimate is smaller than the stationary estimates from Chapters 4 and 5.
+The Chapter 6 shape estimates are smaller than the stationary estimates from Chapters 4 and 5.
 
 This suggests that part of the apparent heavy-tail behavior in stationary models may be explained by changing volatility conditions. Once volatility is included in the model, less tail variation has to be absorbed by the shape parameter.
 
-However, the Chapter 6 shape estimate remains positive, so the heavy-tail interpretation is not eliminated.
+However, the Chapter 6 shape estimates remain positive, so the heavy-tail interpretation is not eliminated.
 
 ## Main Findings
 
@@ -484,7 +610,15 @@ However, the Chapter 6 shape estimate remains positive, so the heavy-tail interp
 
 8. The estimated 10-year return level rises from about 3.97% in low volatility to about 10.34% in extreme crisis volatility.
 
-9. The shape parameter remains positive, supporting the heavy-tail interpretation.
+9. Runs declustering with run length 5 gives an extremal index of about 0.6143, confirming clustering in extreme losses.
+
+10. After declustering, the volatility-dependent GPD still improves over the stationary GPD.
+
+11. The volatility coefficient remains positive after declustering, supporting the robustness of the volatility effect.
+
+12. Crisis-volatility return levels remain similar after declustering.
+
+13. The shape parameter remains positive across all main models, supporting the heavy-tail interpretation.
 
 ## Main Conclusion
 
@@ -495,9 +629,11 @@ Volatility affects both:
 1. the probability of crossing the extreme-loss threshold
 2. the severity of losses once the threshold is crossed
 
+The robustness extension shows that this volatility effect remains even after applying Chapter 5-style declustering.
+
 The main conclusion is:
 
-> Extreme SPY losses are heavy-tailed, clustered, and strongly dependent on market volatility.
+> Extreme SPY losses are heavy-tailed, clustered, and strongly dependent on market volatility. Even after accounting for clustering, volatility remains an important driver of independent extreme-loss severity.
 
 This extends the project progression:
 
@@ -505,7 +641,7 @@ This extends the project progression:
 Chapter 3: Extreme losses are heavy-tailed under a GEV block maxima model.
 Chapter 4: The heavy-tail result persists under a GPD threshold model.
 Chapter 5: Extreme losses cluster over time.
-Chapter 6: Extreme loss risk changes with volatility.
+Chapter 6: Extreme loss risk changes with volatility, even after declustering.
 ```
 
 ## Main Outputs
@@ -529,6 +665,15 @@ gpd_nonstationary_parameter_estimates.csv
 volatility_scenarios.csv
 conditional_return_levels_by_volatility.csv
 stationary_return_levels.csv
+chapter6_declustering_summary.csv
+chapter6_clusters_run_length_5.csv
+cluster_maxima_nonstationary_model_comparison.csv
+cluster_maxima_likelihood_ratio_test.csv
+cluster_maxima_parameter_estimates.csv
+cluster_volatility_scenarios.csv
+cluster_conditional_return_levels_by_volatility.csv
+combined_conditional_return_levels_all_vs_cluster.csv
+main_vs_declustered_nonstationary_summary.csv
 chapter3_to_chapter6_shape_comparison.csv
 chapter6_model_summary.txt
 session_info.txt
@@ -553,6 +698,12 @@ diagnostics_volatility_gpd.png
 diagnostics_volatility_time_gpd.png
 conditional_return_levels_by_volatility.png
 stationary_vs_conditional_return_levels.png
+chapter6_declustered_cluster_maxima.png
+diagnostics_cluster_stationary_gpd.png
+diagnostics_cluster_volatility_gpd.png
+ten_year_return_levels_all_vs_cluster.png
+main_vs_declustered_shape_comparison.png
+main_vs_declustered_beta_vol_comparison.png
 chapter3_to_chapter6_shape_comparison.png
 ```
 

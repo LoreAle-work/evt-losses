@@ -1,10 +1,10 @@
 "model","parameter","estimate","standard_error"
-"stationary GPD","beta_0",-4.77500182867206,0.11514232639847
-"stationary GPD","xi",0.284083367952821,0.0942532853197433
-"volatility-dependent scale GPD","beta_0",-5.14321217031702,0.136160136354378
-"volatility-dependent scale GPD","beta_vol",0.377097953778405,0.0627655705802521
-"volatility-dependent scale GPD","xi",0.120789269873493,0.0849300093299616
-"volatility + time scale GPD","beta_0",-5.1678708689448,0.136568630416529
-"volatility + time scale GPD","beta_vol",0.38016289532531,0.0640987062500954
-"volatility + time scale GPD","beta_time",0.151384913735467,0.0908682545237917
-"volatility + time scale GPD","xi",0.129866231188282,0.082014758486626
+"stationary GPD, all exceedances","beta_0",-4.77521390381004,0.115144366348584
+"stationary GPD, all exceedances","xi",0.284013526701133,0.0942192570870768
+"volatility-dependent GPD, all exceedances","beta_0",-5.1432928954909,0.136166323841234
+"volatility-dependent GPD, all exceedances","beta_vol",0.377107338474709,0.0627680402680247
+"volatility-dependent GPD, all exceedances","xi",0.120829404220529,0.0849351038869566
+"volatility + time GPD, all exceedances","beta_0",-5.16795326017348,0.13657450281798
+"volatility + time GPD, all exceedances","beta_vol",0.380173056610568,0.064101140448791
+"volatility + time GPD, all exceedances","beta_time",0.151397314746258,0.0908711182161088
+"volatility + time GPD, all exceedances","xi",0.129905943010587,0.0820199197531101

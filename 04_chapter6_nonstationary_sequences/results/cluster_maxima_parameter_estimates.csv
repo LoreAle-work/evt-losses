@@ -1,0 +1,6 @@
+"model","parameter","estimate","standard_error"
+"stationary GPD, declustered cluster maxima","beta_0",-4.96039352036776,0.144571004507111
+"stationary GPD, declustered cluster maxima","xi",0.34783670569827,0.11869539373735
+"volatility-dependent GPD, declustered cluster maxima","beta_0",-5.16233010724768,0.163523640752409
+"volatility-dependent GPD, declustered cluster maxima","beta_vol",0.4041351961719,0.0899920270133957
+"volatility-dependent GPD, declustered cluster maxima","xi",0.162953500831831,0.11534578777866
