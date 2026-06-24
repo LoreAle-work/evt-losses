@@ -1,0 +1,121 @@
+Chapter 6: Extremes of Non-Stationary Sequences
+===============================================
+
+Data:
+Asset: SPY
+Returns: daily log returns
+Losses: negative daily log returns
+Covariate: lagged 21-day realized volatility
+Number of usable daily observations: 8384 
+
+Threshold summary:
+  threshold_probability threshold_value threshold_percent total_observations
+1                 0.975      0.02420046          2.420046               8384
+  number_exceedances exceedance_fraction
+1                210          0.02504771
+
+Logistic exceedance model comparison:
+                                        model n_parameters      AIC      BIC
+1             constant exceedance probability            1 1965.224 1972.258
+2 volatility-dependent exceedance probability            2 1699.596 1713.664
+3    volatility + time exceedance probability            3 1701.365 1722.468
+
+Logistic volatility coefficients:
+   Estimate Std. Error   z value     Pr(>|z|)        term
+1 -4.200615 0.09769367 -42.99782 0.000000e+00 (Intercept)
+2  1.009631 0.06131608  16.46600 6.438804e-61       z_vol
+
+GPD non-stationary model comparison:
+                           model n_parameters       nll       AIC       BIC        xi
+1                 stationary GPD            2 -733.1104 -1462.221 -1455.527 0.2840834
+2 volatility-dependent scale GPD            3 -749.3754 -1492.751 -1482.709 0.1207893
+3    volatility + time scale GPD            4 -750.8018 -1493.604 -1480.215 0.1298662
+       se_xi convergence
+1 0.09425329           0
+2 0.08493001           0
+3 0.08201476           0
+
+Likelihood ratio tests:
+                                             comparison LR_statistic df      p_value
+1              stationary vs volatility-dependent scale    32.529832  1 1.173769e-08
+2 volatility-dependent scale vs volatility + time scale     2.852816  1 9.121404e-02
+
+GPD parameter estimates:
+                           model parameter   estimate standard_error
+1                 stationary GPD    beta_0 -4.7750018     0.11514233
+2                 stationary GPD        xi  0.2840834     0.09425329
+3 volatility-dependent scale GPD    beta_0 -5.1432122     0.13616014
+4 volatility-dependent scale GPD  beta_vol  0.3770980     0.06276557
+5 volatility-dependent scale GPD        xi  0.1207893     0.08493001
+6    volatility + time scale GPD    beta_0 -5.1678709     0.13656863
+7    volatility + time scale GPD  beta_vol  0.3801629     0.06409871
+8    volatility + time scale GPD beta_time  0.1513849     0.09086825
+9    volatility + time scale GPD        xi  0.1298662     0.08201476
+
+Volatility scenarios:
+           volatility_state volatility_quantile      z_vol   zeta_hat   sigma_hat
+1            low volatility                0.25 -0.7182711 0.00720461 0.004453474
+2         median volatility                0.50 -0.0718530 0.01374608 0.005682819
+3           high volatility                0.75  0.6575247 0.02828426 0.007481956
+4         crisis volatility                0.90  1.3018773 0.05284000 0.009539856
+5 extreme crisis volatility                0.95  1.6520195 0.07359835 0.010886422
+     xi_hat
+1 0.1207893
+2 0.1207893
+3 0.1207893
+4 0.1207893
+5 0.1207893
+
+Conditional return levels:
+            volatility_state volatility_quantile      z_vol   zeta_hat   sigma_hat
+1             low volatility                0.25 -0.7182711 0.00720461 0.004453474
+2             low volatility                0.25 -0.7182711 0.00720461 0.004453474
+3             low volatility                0.25 -0.7182711 0.00720461 0.004453474
+4          median volatility                0.50 -0.0718530 0.01374608 0.005682819
+5          median volatility                0.50 -0.0718530 0.01374608 0.005682819
+6          median volatility                0.50 -0.0718530 0.01374608 0.005682819
+7            high volatility                0.75  0.6575247 0.02828426 0.007481956
+8            high volatility                0.75  0.6575247 0.02828426 0.007481956
+9            high volatility                0.75  0.6575247 0.02828426 0.007481956
+10         crisis volatility                0.90  1.3018773 0.05284000 0.009539856
+11         crisis volatility                0.90  1.3018773 0.05284000 0.009539856
+12         crisis volatility                0.90  1.3018773 0.05284000 0.009539856
+13 extreme crisis volatility                0.95  1.6520195 0.07359835 0.010886422
+14 extreme crisis volatility                0.95  1.6520195 0.07359835 0.010886422
+15 extreme crisis volatility                0.95  1.6520195 0.07359835 0.010886422
+      xi_hat return_period m_trading_days return_level_decimal return_level_percent
+1  0.1207893        1 year            252           0.02695450             2.695450
+2  0.1207893       5 years           1260           0.03545720             3.545720
+3  0.1207893      10 years           2520           0.03966006             3.966006
+4  0.1207893        1 year            252           0.03181827             3.181827
+5  0.1207893       5 years           1260           0.04354863             4.354863
+6  0.1207893      10 years           2520           0.04934692             4.934692
+7  0.1207893        1 year            252           0.04078423             4.078423
+8  0.1207893       5 years           1260           0.05763477             5.763477
+9  0.1207893      10 years           2520           0.06596396             6.596396
+10 0.1207893        1 year            252           0.05319645             5.319645
+11 0.1207893       5 years           1260           0.07636638             7.636638
+12 0.1207893      10 years           2520           0.08781924             8.781924
+13 0.1207893        1 year            252           0.06232091             6.232091
+14 0.1207893       5 years           1260           0.08984103             8.984103
+15 0.1207893      10 years           2520           0.10344417            10.344417
+
+Stationary return levels:
+           model return_period m_trading_days return_level_decimal return_level_percent
+1 stationary GPD        1 year            252           0.04462930             4.462930
+2 stationary GPD       5 years           1260           0.07368899             7.368899
+3 stationary GPD      10 years           2520           0.09092391             9.092391
+
+Chapter 3 to Chapter 6 shape comparison:
+                               model        xi      se_xi
+1       Chapter 3 GEV monthly maxima 0.1999419 0.04329680
+2           Chapter 4 stationary GPD 0.2840834 0.09425329
+3          Chapter 5 declustered GPD 0.3477862 0.11756542
+4 Chapter 6 volatility-dependent GPD 0.1207893 0.08493001
+
+Interpretation guide:
+If the volatility-dependent scale model improves AIC/BIC or likelihood,
+then there is evidence that exceedance severity changes with volatility.
+If beta_vol is positive, fitted GPD scale increases in high-volatility periods.
+Positive xi estimates continue to support heavy-tailed losses.
+The 90th and 95th percentile volatility states are crisis scenarios.

@@ -1,0 +1,4 @@
+"model","n_parameters","AIC","BIC"
+"constant exceedance probability",1,1965.22411320748,1972.25819361404
+"volatility-dependent exceedance probability",2,1699.59608705229,1713.66424786541
+"volatility + time exceedance probability",3,1701.36541236415,1722.46765358383

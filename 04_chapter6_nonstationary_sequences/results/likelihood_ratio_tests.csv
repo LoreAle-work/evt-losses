@@ -1,0 +1,3 @@
+"comparison","LR_statistic","df","p_value"
+"stationary vs volatility-dependent scale",32.5298320749855,1,1.17376880363135e-08
+"volatility-dependent scale vs volatility + time scale",2.85281595781044,1,0.0912140430821729

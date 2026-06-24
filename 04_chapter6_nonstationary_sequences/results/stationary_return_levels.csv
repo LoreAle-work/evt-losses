@@ -1,0 +1,4 @@
+"model","return_period","m_trading_days","return_level_decimal","return_level_percent"
+"stationary GPD","1 year",252,0.0446293038374408,4.46293038374407
+"stationary GPD","5 years",1260,0.0736889933452001,7.36889933452001
+"stationary GPD","10 years",2520,0.0909239054458469,9.09239054458469
