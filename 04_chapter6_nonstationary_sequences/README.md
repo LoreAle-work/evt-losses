@@ -99,8 +99,8 @@ $$
 
 where:
 
-- sigma is the scale parameter
-- xi is the shape parameter
+- $$\sigma$$ is the scale parameter
+- $$\xi$$ is the shape parameter
 
 In this model, the tail behavior is constant over time.
 
@@ -152,9 +152,9 @@ The three GPD models compared are:
 
 | Model | Scale structure | Shape |
 |---|---|---|
-| Stationary GPD | constant sigma | constant xi |
-| Volatility GPD | sigma depends on volatility | constant xi |
-| Volatility + Time GPD | sigma depends on volatility and time | constant xi |
+| Stationary GPD | constant sigma | constant $$\xi$$ |
+| Volatility GPD | sigma depends on volatility | constant $$\xi$$ |
+| Volatility + Time GPD | sigma depends on volatility and time | constant $$\xi$$ |
 
 ## Exceedance Probability Model
 
@@ -170,9 +170,7 @@ $$
 
 The main logistic model is:
 
-$$
-\operatorname{logit}(P(L_t > u)) = \alpha_0 + \alpha_1 z_t
-$$
+$$ \log \left( \frac{P(L_t > u)}{1 - P(L_t > u)} \right) = \alpha_0 + \alpha_1 z_t $$
 
 If alpha<sub>1</sub> is positive, high-volatility periods have a higher probability of producing threshold exceedances.
 
@@ -250,7 +248,7 @@ The script estimates the models using `optim` in R.
 
 The stationary GPD model is compared with two non-stationary alternatives.
 
-| Model | Parameters | AIC | BIC | xi |
+| Model | Parameters | AIC | BIC | $$\xi$$ |
 |---|---:|---:|---:|---:|
 | Stationary GPD | 2 | -1462.22 | -1455.53 | 0.2841 |
 | Volatility-dependent scale GPD | 3 | -1492.75 | -1482.71 | 0.1208 |
@@ -332,21 +330,18 @@ The 90th and 95th percentile scenarios are included because the 75th percentile 
 
 For a return period m, the conditional return level is:
 
-$$
-x_m(z)
-=
+$$x_m(z) =
 u +
 \frac{\sigma(z)}{\xi}
 \left[
 (m \zeta(z))^\xi - 1
-\right]
-$$
+\right] $$
 
 where:
 
-- sigma(z) is the volatility-dependent GPD scale
-- zeta(z) is the volatility-dependent threshold exceedance probability
-- xi is the shape parameter
+- $$\sigma(z)$$ is the volatility-dependent GPD scale
+- $$\zeta(z)$$ is the volatility-dependent threshold exceedance probability
+- $$\xi$$ is the shape parameter
 - m is the return period in trading days
 
 The return periods are:
@@ -420,9 +415,7 @@ The script produces diagnostic plots based on transformed residuals.
 
 For a fitted model, the fitted GPD CDF value is:
 
-$$
-H_i(y_i)
-$$
+$$H_i(y_i)$$
 
 If the model is appropriate, these fitted probabilities should behave approximately like Uniform(0, 1) random variables.
 
