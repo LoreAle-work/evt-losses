@@ -100,8 +100,8 @@ $$
 
 where:
 
-- sigma is the scale parameter
-- xi is the shape parameter
+- $$\sigma$$ is the scale parameter
+- $$\xi$$ is the shape parameter
 
 In this model, the tail behavior is constant over time.
 
@@ -125,11 +125,11 @@ $$
 
 where:
 
-- sigma<sub>t</sub> is the time-varying scale parameter
-- z<sub>t</sub> is standardized lagged log-volatility
-- beta<sub>0</sub> is the intercept
-- beta<sub>1</sub> measures the effect of volatility
-- xi is the shape parameter
+- $$sigma_t$$ is the time-varying scale parameter
+- $$z_t$$ is standardized lagged log-volatility
+- $$\beta_0$$ is the intercept
+- $$\beta_1$$ measures the effect of volatility
+- $$\xi$$ is the shape parameter
 
 The logarithmic link ensures that:
 
@@ -171,9 +171,7 @@ $$
 
 The main logistic model is:
 
-$$
-\log \left( \frac{P(L_t > u)}{1 - P(L_t > u)} \right)
-=
+$$\log \left( \frac{P(L_t > u)}{1 - P(L_t > u)} \right)=
 \alpha_0 + \alpha_1 z_t
 $$
 
@@ -458,13 +456,13 @@ $$
 \log(\sigma_j) = \beta_0 + \beta_1 z_j
 $$
 
-where z<sub>j</sub> is lagged volatility on the date of the cluster maximum.
+where $$z_j$$ is lagged volatility on the date of the cluster maximum.
 
 ## Declustered Cluster-Maxima Model Results
 
 The comparison between stationary and volatility-dependent GPD models for declustered cluster maxima is:
 
-| Model | Parameters | Observations | AIC | BIC | xi |
+| Model | Parameters | Observations | AIC | BIC | $$\xi$$ |
 |---|---:|---:|---:|---:|---:|
 | Stationary GPD, cluster maxima | 2 | 129 | -928.04 | -922.32 | 0.3478 |
 | Volatility-dependent GPD, cluster maxima | 3 | 129 | -942.53 | -933.95 | 0.1630 |
@@ -503,7 +501,7 @@ Therefore, volatility remains important even after accounting for clustering. Th
 
 The main all-exceedance model and the declustered cluster-maxima robustness model are compared below.
 
-| Model | Observations | xi | SE(xi) | beta_vol | SE(beta_vol) | AIC | BIC |
+| Model | Observations | $$\xi$$ | SE($$\xi$$) |  β<sub>vol</sub>  | SE(β<sub>vol</sub>) | AIC | BIC |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | All exceedances stationary GPD | 210 | 0.2840 | 0.0942 | NA | NA | -1462.23 | -1455.54 |
 | All exceedances volatility GPD | 210 | 0.1208 | 0.0849 | 0.3771 | 0.0628 | -1492.76 | -1482.72 |
@@ -514,7 +512,7 @@ In both the all-exceedance model and the declustered cluster-maxima model, addin
 
 The volatility coefficient is also similar across the two non-stationary models:
 
-| Model | beta_vol |
+| Model | β<sub>vol</sub> |
 |---|---:|
 | All exceedances volatility GPD | 0.3771 |
 | Cluster maxima volatility GPD | 0.4041 |
@@ -578,7 +576,7 @@ The project progression so far is:
 
 The estimated shape parameters are:
 
-| Chapter | Model | xi | SE(xi) |
+| Chapter | Model | $$\xi$$ | SE($$\xi$$) |
 |---|---|---:|---:|
 | Chapter 3 | GEV monthly maxima | 0.1999 | 0.0433 |
 | Chapter 4 | Stationary GPD | 0.2840 | 0.0942 |
