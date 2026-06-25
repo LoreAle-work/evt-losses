@@ -153,9 +153,9 @@ The three GPD models compared are:
 
 | Model | Scale structure | Shape |
 |---|---|---|
-| Stationary GPD | constant sigma | constant xi |
-| Volatility GPD | sigma depends on volatility | constant xi |
-| Volatility + Time GPD | sigma depends on volatility and time | constant xi |
+| Stationary GPD | constant sigma | constant $$\xi$$ |
+| Volatility GPD | sigma depends on volatility | constant $$\xi$$ |
+| Volatility + Time GPD | sigma depends on volatility and time | constant $$\xi$$ |
 
 ## Exceedance Probability Model
 
@@ -251,7 +251,7 @@ The script estimates the models using `optim` in R.
 
 The stationary GPD model is compared with two non-stationary alternatives using all threshold exceedances.
 
-| Model | Parameters | Observations | AIC | BIC | xi |
+| Model | Parameters | Observations | AIC | BIC | $$\xi$$ |
 |---|---:|---:|---:|---:|---:|
 | Stationary GPD, all exceedances | 2 | 210 | -1462.23 | -1455.54 | 0.2840 |
 | Volatility-dependent GPD, all exceedances | 3 | 210 | -1492.76 | -1482.72 | 0.1208 |
@@ -344,9 +344,9 @@ $$
 
 where:
 
-- sigma(z) is the volatility-dependent GPD scale
-- zeta(z) is the volatility-dependent threshold exceedance probability
-- xi is the shape parameter
+- $$\sigma(z)$$ is the volatility-dependent GPD scale
+- $$\zeta(z)$$ is the volatility-dependent threshold exceedance probability
+- $$\xi$$ is the shape parameter
 - m is the return period in trading days
 
 The return periods are:
