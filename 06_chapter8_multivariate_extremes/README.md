@@ -2,11 +2,13 @@
 
 ## Joint Extreme Losses in SPY, QQQ, TLT, and VIX
 
-This chapter extends the project from **univariate extreme-value modeling** to **multivariate extremes**. Earlier chapters studied the tail behavior of a single financial loss series, mainly SPY daily losses. Chapter 8 asks a different question:
+This chapter extends the project from **univariate extreme-value modeling** to **multivariate extremes**.
 
-> When one financial variable is extreme, how likely is another variable to be extreme at the same time?
+Earlier chapters studied the tail behavior of a single financial loss series, mainly SPY daily losses. Chapter 8 asks a broader question:
 
-This matters because financial crises are rarely isolated one-dimensional events. Extreme equity losses, bond stress, and volatility spikes can occur together, but not all pairs behave the same way. Chapter 8 is about measuring and comparing those joint tail relationships.
+> When one financial variable becomes extreme, how likely is another variable to become extreme at the same time?
+
+This matters because financial crises are rarely one-dimensional. Equity losses, bond stress, and volatility spikes can occur together, but not all pairs behave in the same way. The goal of this chapter is to measure and compare **joint tail dependence** across different financial relationships.
 
 The analysis focuses on three pairs:
 
@@ -21,10 +23,36 @@ The main conclusion is that extremal dependence differs sharply across pairs:
 | Rank | Pair | Main finding |
 |---:|---|---|
 | 1 | SPY-QQQ | Strongest joint tail dependence |
-| 2 | SPY-VIX | Strong crash-volatility dependence |
+| 2 | SPY-VIX | Substantial crash-volatility dependence |
 | 3 | SPY-TLT | Very weak joint tail dependence |
 
-This supports the main Chapter 8 lesson: **ordinary correlation and marginal tail risk are not enough to describe joint extremes**. The dependence structure in the tail matters.
+The chapter supports the central idea of multivariate EVT:
+
+> Marginal tail risk is not enough. To understand financial crises, we also need to understand how extremes occur together.
+
+---
+
+## Summary
+
+This chapter compares three types of joint financial extremes.
+
+SPY-QQQ represents equity-equity crash dependence. SPY-TLT represents equity-bond joint stress. SPY-VIX represents equity crash-volatility spike dependence.
+
+The results show that:
+
+- SPY-QQQ has the strongest joint tail dependence.
+- SPY-VIX has substantial but less balanced crash-volatility dependence.
+- SPY-TLT has very weak joint tail dependence.
+
+The ranking is stable across:
+
+- empirical tail-dependence estimates,
+- joint exceedance ratios,
+- conditional co-exceedance probabilities,
+- angular diagnostics,
+- Fréchet-scale structure summaries.
+
+This shows why ordinary correlation is not enough. Correlation describes average co-movement. Multivariate EVT studies dependence in the tail, where financial risk is usually most important.
 
 ---
 
@@ -46,10 +74,10 @@ The common sample begins when all four series are available.
 | Start date | 2002-07-31 |
 | End date | 2026-06-25 |
 | Observations | 6014 |
-| Main threshold | 97.5% marginal quantile |
-| Exceedances per margin at 97.5% | 151 |
+| Main marginal threshold | 97.5% |
+| Exceedances per marginal series | 151 |
 
-The analysis uses a common sample across all assets so that cross-pair comparisons are based on the same dates.
+A common sample is used across all pairs so that the pairwise results are comparable.
 
 ---
 
@@ -75,33 +103,35 @@ $$
 
 Therefore, all variables are oriented so that **larger positive values represent more extreme stress**.
 
-The final extreme-direction variables are:
+The final variables are:
 
-| Variable | Definition |
-|---|---|
-| SPY_extreme | negative SPY log return |
-| QQQ_extreme | negative QQQ log return |
-| TLT_extreme | negative TLT log return |
-| VIX_extreme | positive VIX log return |
+| Variable | Definition | Interpretation |
+|---|---|---|
+| SPY_extreme | negative SPY log return | large SPY loss |
+| QQQ_extreme | negative QQQ log return | large QQQ loss |
+| TLT_extreme | negative TLT log return | large TLT loss |
+| VIX_extreme | positive VIX log return | large VIX increase |
 
-This orientation is important. A large positive SPY value means a large SPY loss, while a large positive VIX value means a large VIX increase.
+This orientation is important. A large positive value always means financial stress.
 
 ---
 
 ## 3. Why multivariate extremes?
 
-A univariate EVT model can estimate the probability of large SPY losses. But it cannot answer questions like:
+A univariate EVT model can estimate the probability of large SPY losses. But it cannot answer questions such as:
 
 - Are SPY and QQQ likely to crash together?
 - Does TLT experience extreme losses on the same days as SPY?
 - How often do large SPY losses coincide with large VIX increases?
 - Are joint extremes balanced, or does one variable dominate the event?
 
-Chapter 8 introduces tools for this type of joint tail analysis.
+Chapter 8 introduces tools for studying these questions.
 
-The central object is not ordinary correlation, but **extremal dependence**.
+The central object is not ordinary correlation. The central object is **extremal dependence**.
 
 Ordinary correlation measures average linear co-movement. Extremal dependence measures whether very large observations occur together.
+
+This distinction matters because two assets can be moderately correlated on average but strongly linked during crises. They can also be correlated in normal periods but weakly dependent in the joint tail.
 
 ---
 
@@ -122,22 +152,24 @@ where:
 - $$\sigma$$ is the scale parameter,
 - $$\xi$$ is the shape parameter.
 
-The estimated marginal GPD parameters are:
+The marginal GPD fits are:
 
-| Asset | Threshold | Threshold (%) | Exceedances | GPD scale | GPD shape $$\xi$$ |
-|---|---:|---:|---:|---:|---:|
-| SPY | 0.024386 | 2.4386% | 151 | 0.009930 | 0.2420 |
-| QQQ | 0.029485 | 2.9485% | 151 | 0.009656 | 0.1431 |
-| TLT | 0.018023 | 1.8023% | 151 | 0.004814 | 0.1548 |
-| VIX | 0.163193 | 16.3193% | 151 | 0.068502 | 0.1352 |
+| Asset | Threshold | Threshold (%) | Exceedances | Scale $$\sigma$$ | Shape $$\xi$$ | SE of $$\xi$$ |
+|---|---:|---:|---:|---:|---:|---:|
+| SPY | 0.024386 | 2.4386% | 151 | 0.009930 | 0.2420 | 0.1080 |
+| QQQ | 0.029485 | 2.9485% | 151 | 0.009656 | 0.1431 | 0.0887 |
+| TLT | 0.018023 | 1.8023% | 151 | 0.004814 | 0.1548 | 0.0820 |
+| VIX | 0.163193 | 16.3193% | 151 | 0.068502 | 0.1352 | 0.1001 |
 
-All estimated marginal shape parameters are positive, although uncertainty remains. This is consistent with heavy-tailed marginal stress variables.
+All estimated marginal shape parameters are positive, although the standard errors are not negligible. This is consistent with heavy-tailed marginal stress behavior.
+
+The marginal results are not the main focus of Chapter 8, but they are useful because multivariate extremes require careful treatment of the individual margins before analyzing dependence.
 
 ---
 
 ### 4.2 Empirical transformation to standard Fréchet margins
 
-Multivariate EVT separates marginal tail behavior from dependence structure. To focus on dependence, the margins are transformed to approximately standard Fréchet scale.
+Multivariate EVT separates marginal behavior from dependence structure. To focus on dependence, the margins are transformed to approximately standard Fréchet scale.
 
 First, empirical ranks are converted to pseudo-uniform variables:
 
@@ -157,7 +189,9 @@ $$
 F(z) = \exp\left(-\frac{1}{z}\right), \quad z > 0
 $$
 
-This transformation makes the marginal scales comparable and allows the analysis to focus on extremal dependence.
+This transformation makes the marginal scales comparable. After this step, the analysis focuses on dependence rather than differences in raw units.
+
+This is especially important for SPY-VIX, because SPY losses and VIX increases are not naturally on the same raw scale.
 
 ---
 
@@ -169,7 +203,7 @@ $$
 \chi(u) = P(U_Y > u \mid U_X > u)
 $$
 
-Empirically, since both marginal variables are approximately uniform,
+Empirically, because both variables are approximately uniform after ranking,
 
 $$
 \chi(u) =
@@ -178,16 +212,13 @@ $$
 
 If $$\chi(u)$$ remains high as $$u$$ increases, this suggests strong extremal dependence over the observed tail range.
 
-If $$\chi(u)$$ moves toward zero, this suggests weak joint tail dependence or asymptotic independence.
+If $$\chi(u)$$ is close to zero, this suggests weak joint tail dependence.
 
-The summary statistic used in this project is:
+The chapter reports:
 
-$$
-\hat{\chi} =
-\text{average of } \chi(u) \text{ for } u \geq 0.95
-$$
+$$\hat{\chi}=\text{average of } \chi(u) \text{ for } u \geq 0.95$$
 
-This is an empirical high-threshold summary, not a proof of asymptotic dependence.
+This is an empirical high-threshold summary. It is not a proof of asymptotic dependence.
 
 ---
 
@@ -195,21 +226,22 @@ This is an empirical high-threshold summary, not a proof of asymptotic dependenc
 
 The second diagnostic is:
 
-$$
-\bar{\chi}(u)
-=
-\frac{2 \log(1-u)}
-{\log P(U_X > u, U_Y > u)}
-- 1
-$$
+$$\bar{\chi}(u)=\frac{2 \log(1-u)}{\log P(U_X > u, U_Y > u)}- 1$$
 
-This statistic helps diagnose the strength of residual association in the joint tail, especially when $$\chi(u)$$ is near zero.
+This statistic helps diagnose residual association in the joint tail, especially when $$\chi(u)$$ is small.
+
+Broadly:
+
+- $$\chi(u)$$ focuses on asymptotic dependence strength.
+- $$\bar{\chi}(u)$$ helps describe residual dependence when full asymptotic dependence may not hold.
+
+The project uses both diagnostics graphically.
 
 ---
 
 ### 4.5 Implied logistic dependence parameter
 
-For the bivariate logistic extreme value model, the relationship between the tail dependence coefficient and the logistic dependence parameter is:
+For the bivariate logistic extreme-value model, the relationship between the tail dependence coefficient and the logistic dependence parameter is:
 
 $$
 \chi = 2 - 2^\alpha
@@ -222,17 +254,20 @@ $$
 \frac{\log(2-\chi)}{\log(2)}
 $$
 
-This project reports an **implied logistic alpha**:
+This project reports an empirical implied logistic alpha:
 
-$$
-\hat{\alpha}
-=
+$$\hat{\alpha}=
 \frac{\log(2-\hat{\chi})}{\log(2)}
 $$
 
-Smaller values of $$\alpha$$ indicate stronger extremal dependence. Values near 1 indicate weak extremal dependence.
+Interpretation:
 
-Important methodological note: this is **not** a full bivariate likelihood estimate. It is an implied dependence summary derived from empirical $$\hat{\chi}$$.
+| Value of $$\alpha$$ | Interpretation |
+|---|---|
+| close to 0 | strong extremal dependence |
+| close to 1 | weak extremal dependence |
+
+Important note: this is **not** a full bivariate likelihood estimate. It is an implied dependence summary derived from empirical $$\hat{\chi}$$.
 
 ---
 
@@ -262,13 +297,13 @@ $$
 
 The joint exceedance ratio is:
 
-$$
-\text{Joint ratio}
-=
+$$\text{Joint ratio}=
 \frac{p_{XY}}{p_X p_Y}
 $$
 
 A ratio greater than 1 means joint extremes occur more often than independence would predict.
+
+A ratio close to 1 means the pair behaves close to independence at that threshold.
 
 ---
 
@@ -280,7 +315,7 @@ $$
 P(Y > q_Y \mid X > q_X)
 $$
 
-Because the analysis uses equal marginal quantile levels, we have:
+Since the same marginal quantile level is used for both variables,
 
 $$
 P(X > q_X) = P(Y > q_Y)
@@ -288,15 +323,15 @@ $$
 
 Therefore:
 
-$$
-P(Y > q_Y \mid X > q_X)
-=
+$$P(Y > q_Y \mid X > q_X)=
 P(X > q_X \mid Y > q_Y)
 $$
 
-This means the conditional probabilities are mechanically equal. They should be interpreted as **co-exceedance strength**, not as directional asymmetry.
+These probabilities should therefore be interpreted as **co-exceedance strength**, not directional asymmetry.
 
-Directional structure is instead analyzed using angular diagnostics.
+Directional structure is studied separately using angular diagnostics.
+
+This distinction matters. Otherwise, one might incorrectly interpret equal conditional probabilities as a causal or directional statement. The equality is mechanical because the same quantile level is used for both margins.
 
 ---
 
@@ -339,6 +374,8 @@ The angular analysis reports:
 | endpoint-heavy share | one variable dominates the radial extreme |
 | endpoint asymmetry | difference between X-dominated and Y-dominated endpoint mass |
 
+The angular analysis is useful because two pairs can have similar co-exceedance probabilities but different structures. One pair may have balanced joint extremes, while another may have radial extremes dominated by one variable.
+
 ---
 
 ### 4.9 Bootstrap uncertainty
@@ -347,9 +384,9 @@ The project reports both IID and block bootstrap intervals for $$\hat{\chi}$$.
 
 The IID bootstrap resamples individual observations. This is simple but ignores serial dependence.
 
-The block bootstrap resamples blocks of consecutive observations. The block length is 5 trading days, matching the declustering logic used earlier in Chapter 5.
+The block bootstrap resamples blocks of consecutive observations. The block length is 5 trading days.
 
-The main interpretation uses the **block bootstrap confidence interval**, because financial extremes cluster over time.
+The block bootstrap is preferred because financial extremes cluster over time. This connects directly to Chapter 5, where the project found clustering in extreme SPY losses.
 
 ---
 
@@ -361,17 +398,19 @@ $$
 Z_{\max} = \max(X, Y)
 $$
 
-and
+and:
 
 $$
 Z_{\min} = \min(X, Y)
 $$
 
-The maximum structure variable measures the worst single-variable stress event. The minimum structure variable measures joint stress because it is large only when both variables are large.
+The maximum structure variable measures worst-component stress.
 
-A GPD is fitted to these raw structure variables above their 97.5% thresholds.
+The minimum structure variable measures joint stress, because it is large only when both variables are large.
 
-For cross-pair comparison, especially for SPY-VIX, Fréchet-scale structure summaries are also reported. This matters because raw SPY losses and VIX increases are not directly comparable in scale.
+A GPD is fitted to these structure variables above their 97.5% thresholds.
+
+For cross-pair comparison, Fréchet-scale structure summaries are also reported. This is especially important for SPY-VIX, because VIX increases and ETF losses are not directly comparable in raw units.
 
 ---
 
@@ -385,7 +424,7 @@ For cross-pair comparison, especially for SPY-VIX, Fréchet-scale structure summ
 | SPY-TLT | -0.3032 | Negative average equity-bond dependence |
 | SPY-VIX | 0.7356 | Strong average crash-volatility co-movement |
 
-Correlation already suggests that the three pairs behave differently. But the EVT analysis shows that tail dependence gives a sharper picture.
+Correlation already suggests that the three pairs behave differently. But correlation is not enough. The EVT diagnostics show how these relationships behave specifically in the tail.
 
 ---
 
@@ -439,47 +478,67 @@ SPY-QQQ remains strongly dependent across all thresholds. SPY-VIX also remains m
 
 ---
 
-## 6. Angular results
+## 6. How to read the main diagnostics
 
-### 6.1 Main angular summary
+This chapter uses several diagnostics because multivariate extremes cannot be summarized well by one number. Humanity tried doing everything with one number, and then risk management became interpretive dance.
 
-At the 95% radial threshold:
+Each diagnostic answers a different question.
 
-| Pair | Balanced share $$W \in [0.4,0.6]$$ | Endpoint-heavy share | Endpoint asymmetry |
-|---|---:|---:|---:|
-| SPY-QQQ | 0.3654 | 0.2126 | -0.0266 |
-| SPY-VIX | 0.1661 | 0.5648 | 0.0199 |
-| SPY-TLT | 0.0299 | 0.9435 | 0.0000 |
+| Diagnostic | Main question answered |
+|---|---|
+| Pearson correlation | Do the two variables move together on average? |
+| Marginal GPD shape $$\xi$$ | Are the individual stress variables heavy-tailed? |
+| $$\chi(u)$$ | Do very large values occur together? |
+| $$\hat{\chi}$$ | What is the average high-threshold extremal dependence? |
+| Implied $$\alpha$$ | How strong is tail dependence under a logistic-style summary? |
+| Joint exceedance ratio | How much more frequent are joint extremes than under independence? |
+| Conditional co-exceedance | When one variable is extreme, how often is the other also extreme? |
+| Angular variable $$W$$ | Are joint extremes balanced or dominated by one variable? |
+| Structure variables | How large are worst-component and joint-stress events? |
 
-Interpretation:
+The key idea is:
 
-- SPY-QQQ has the most balanced joint extremes.
-- SPY-VIX has meaningful joint tail dependence but more endpoint dominance.
-- SPY-TLT radial extremes are overwhelmingly endpoint-heavy.
+> Correlation is not tail dependence.
 
-The endpoint asymmetry values are small. This means the main angular difference is not strong directional asymmetry. The key difference is **balanced joint extremes versus endpoint-dominated extremes**.
+A pair can have high correlation but still have a different tail structure from another highly correlated pair. A pair can also have moderate average dependence but very strong crisis dependence.
 
 ---
 
-### 6.2 Angular sensitivity
+## 7. Correlation versus extremal dependence
 
-The angular analysis is repeated at radial thresholds of 90%, 95%, and 97.5%.
+The three pairs show three different dependence regimes.
 
-| Pair | Radial threshold | Balanced share | Endpoint-heavy share |
-|---|---:|---:|---:|
-| SPY-QQQ | 90% | 0.3937 | 0.1711 |
-| SPY-QQQ | 95% | 0.3654 | 0.2126 |
-| SPY-QQQ | 97.5% | 0.3377 | 0.2318 |
-| SPY-TLT | 90% | 0.0365 | 0.9186 |
-| SPY-TLT | 95% | 0.0299 | 0.9435 |
-| SPY-TLT | 97.5% | 0.0066 | 0.9735 |
-| SPY-VIX | 90% | 0.2209 | 0.4518 |
-| SPY-VIX | 95% | 0.1661 | 0.5648 |
-| SPY-VIX | 97.5% | 0.1523 | 0.6623 |
+| Pair | Pearson correlation | $$\hat{\chi}$$ | Interpretation |
+|---|---:|---:|---|
+| SPY-QQQ | 0.9133 | 0.7105 | Strong average and strong tail dependence |
+| SPY-TLT | -0.3032 | 0.0451 | Negative average dependence and weak joint tail dependence |
+| SPY-VIX | 0.7356 | 0.4630 | Strong crash-volatility dependence |
 
-The ranking is stable:
+SPY-QQQ is the simplest case. Correlation is high, and tail dependence is also high. Both the average relationship and the extreme relationship point in the same direction.
+
+SPY-TLT is the contrast case. The correlation is negative, and the estimated tail dependence is close to zero. Extreme losses in SPY and TLT rarely occur together relative to SPY-QQQ and SPY-VIX.
+
+SPY-VIX is the stress-volatility case. The correlation is positive and high because VIX tends to rise when SPY falls. The tail-dependence estimate confirms that this relationship remains important in the joint tail. However, the angular results show that SPY-VIX extremes are less balanced than SPY-QQQ extremes.
+
+This is why Chapter 8 matters. A single correlation matrix would miss much of the structure of joint extremes.
+
+---
+
+## 8. Interpretation of $$\chi(u)$$
+
+The empirical $$\chi(u)$$ curves are one of the most important outputs of the chapter.
+
+The estimate:
+
+$$
+\chi(u) = P(U_Y > u \mid U_X > u)
+$$
+
+measures the probability that one variable is extreme given that the other variable is extreme.
+
+The plot `comparison_chi_all_pairs.png` shows a clear ranking:
 
 ```text
-SPY-QQQ has the most balanced joint extremes.
-SPY-VIX is intermediate.
-SPY-TLT is overwhelmingly endpoint-dominated.
+SPY-QQQ highest
+SPY-VIX intermediate
+SPY-TLT lowest
