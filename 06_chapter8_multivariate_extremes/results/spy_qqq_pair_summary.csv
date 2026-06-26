@@ -1,0 +1,2 @@
+"pair","asset_x","asset_y","n_observations","start_date","end_date","mean_x","mean_y","sd_x","sd_y","pearson_correlation","threshold_probability"
+"spy_qqq","SPY","QQQ",6014,2002-07-31,2026-06-25,-0.000420123507318038,-0.000591044985241852,0.0118674276168877,0.0139026071427931,0.913303277943174,0.975

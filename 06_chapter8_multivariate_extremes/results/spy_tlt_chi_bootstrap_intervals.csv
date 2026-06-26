@@ -1,0 +1,3 @@
+"pair","bootstrap_type","block_length","high_chi_cutoff","n_bootstrap_requested","n_bootstrap_success","chi_boot_mean","chi_boot_sd","chi_ci_lower","chi_ci_upper"
+"spy_tlt","iid",NA,0.95,500,500,0.0449542029796437,0.0134493674741011,0.0192030434277691,0.0735371874796551
+"spy_tlt","block",5,0.95,500,500,0.0455650747902162,0.0132894551316993,0.0213986478639788,0.0726961714553169

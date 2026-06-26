@@ -1,0 +1,2 @@
+"pair","asset_x","asset_y","n_observations","start_date","end_date","mean_x","mean_y","sd_x","sd_y","pearson_correlation","threshold_probability"
+"spy_vix","SPY","VIX",6014,2002-07-31,2026-06-25,-0.000420123507318038,-8.72298180527297e-05,0.0118674276168877,0.0733604041767344,0.735612155687239,0.975

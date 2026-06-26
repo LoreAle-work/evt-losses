@@ -1,0 +1,2 @@
+"pair","asset_x","asset_y","pearson_correlation","chi_hat","chi_ci_lower_block","chi_ci_upper_block","implied_alpha_hat","joint_ratio_975","conditional_coexceedance_975","n_joint_975","angular_share_joint_0_4_0_6","angular_share_endpoint_heavy","angular_balance_mean","angular_balance_median","endpoint_asymmetry"
+"spy_vix","SPY","VIX",0.735612155687239,0.463037744381277,0.379244505325317,0.556749473890728,0.620081736075975,16.8806631288101,0.423841059602649,64,0.166112956810631,0.564784053156146,0.00396197172842028,-0.0355452024476746,0.0199335548172758

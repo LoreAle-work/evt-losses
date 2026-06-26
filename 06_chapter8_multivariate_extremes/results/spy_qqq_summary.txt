@@ -1,0 +1,129 @@
+Chapter 8 Pair Summary
+======================
+
+Pair: spy_qqq 
+Asset X: SPY 
+Asset Y: QQQ 
+Observations: 6014 
+Start date: 2002-07-31 
+End date: 2026-06-25 
+Pearson correlation: 0.9133033 
+
+Marginal GPD fits:
+  asset threshold_probability  threshold threshold_percent n_observations n_exceedances
+1   SPY                 0.975 0.02438622          2.438622           6014           151
+2   QQQ                 0.975 0.02948475          2.948475           6014           151
+  exceedance_fraction       sigma        xi    se_sigma      se_xi
+1          0.02510808 0.009929601 0.2419586 0.001295816 0.10801626
+2          0.02510808 0.009656396 0.1433471 0.001124810 0.08880147
+
+Joint exceedance table:
+     pair quantile_level x_threshold y_threshold x_threshold_percent y_threshold_percent
+1 spy_qqq          0.900  0.01174950  0.01533689            1.174950            1.533689
+2 spy_qqq          0.950  0.01775403  0.02245408            1.775403            2.245408
+3 spy_qqq          0.975  0.02438622  0.02948475            2.438622            2.948475
+4 spy_qqq          0.990  0.03435350  0.03936936            3.435350            3.936936
+  p_x_exceed p_y_exceed p_joint_exceed independence_prediction
+1 0.10009977 0.10009977    0.075324243            0.0100199634
+2 0.05004988 0.05004988    0.036082474            0.0025049908
+3 0.02510808 0.02510808    0.017126704            0.0006304157
+4 0.01014300 0.01014300    0.006817426            0.0001028804
+  joint_to_independence_ratio p_y_extreme_given_x_extreme p_x_extreme_given_y_extreme
+1                    7.517417                   0.7524917                   0.7524917
+2                   14.404234                   0.7209302                   0.7209302
+3                   27.167317                   0.6821192                   0.6821192
+4                   66.265520                   0.6721311                   0.6721311
+  conditional_coexceedance n_joint_exceedances
+1                0.7524917                 453
+2                0.7209302                 217
+3                0.6821192                 103
+4                0.6721311                  41
+
+Conditional co-exceedance table:
+     pair quantile_level conditional_coexceedance p_y_extreme_given_x_extreme
+1 spy_qqq          0.900                0.7524917                   0.7524917
+2 spy_qqq          0.950                0.7209302                   0.7209302
+3 spy_qqq          0.975                0.6821192                   0.6821192
+4 spy_qqq          0.990                0.6721311                   0.6721311
+  p_x_extreme_given_y_extreme n_joint_exceedances
+1                   0.7524917                 453
+2                   0.7209302                 217
+3                   0.6821192                 103
+4                   0.6721311                  41
+
+Empirical implied logistic dependence summary:
+     pair high_chi_cutoff n_high_threshold_points   chi_hat implied_alpha_hat
+1 spy_qqq            0.95                       6 0.7104609         0.3668556
+                                      model_note
+1 implied_from_empirical_chi_not_full_likelihood
+
+Chi bootstrap intervals:
+     pair bootstrap_type block_length high_chi_cutoff n_bootstrap_requested
+1 spy_qqq            iid           NA            0.95                   500
+2 spy_qqq          block            5            0.95                   500
+  n_bootstrap_success chi_boot_mean chi_boot_sd chi_ci_lower chi_ci_upper
+1                 500     0.7115555  0.05221671    0.6105086    0.8095950
+2                 500     0.7122408  0.06072096    0.5920418    0.8368152
+
+Angular summary:
+     pair angular_probability radial_threshold n_radial_extremes    mean_W  median_W
+1 spy_qqq                0.95         38.08971               301 0.4992552 0.4957774
+       sd_W angular_balance_mean angular_balance_median share_W_between_0_4_and_0_6
+1 0.1871885        -0.0007447872           -0.004222633                   0.3654485
+  share_W_below_0_25 share_W_above_0_75 share_endpoint_heavy endpoint_asymmetry
+1          0.1196013         0.09302326            0.2126246        -0.02657807
+
+Angular sensitivity:
+     pair angular_probability radial_threshold n_radial_extremes    mean_W  median_W
+1 spy_qqq               0.900         19.81183               602 0.4962174 0.4961822
+2 spy_qqq               0.950         38.08971               301 0.4992552 0.4957774
+3 spy_qqq               0.975         77.08112               151 0.4979931 0.4957774
+       sd_W angular_balance_mean angular_balance_median share_W_between_0_4_and_0_6
+1 0.1762412        -0.0037825632           -0.003817846                   0.3936877
+2 0.1871885        -0.0007447872           -0.004222633                   0.3654485
+3 0.1913393        -0.0020069194           -0.004222633                   0.3377483
+  share_W_below_0_25 share_W_above_0_75 share_endpoint_heavy endpoint_asymmetry
+1         0.09966777         0.07142857            0.1710963       -0.028239203
+2         0.11960133         0.09302326            0.2126246       -0.026578073
+3         0.11920530         0.11258278            0.2317881       -0.006622517
+
+Frechet structure summary:
+     pair max_frechet_q90 max_frechet_q95 max_frechet_q975 max_frechet_q99
+1 spy_qqq        12.17501        24.98395         51.20778         135.809
+  min_frechet_q90 min_frechet_q95 min_frechet_q975 min_frechet_q99
+1        7.209883        13.70377         27.96043        69.23401
+
+Raw structure variable GPD fits:
+  structure_variable threshold_probability  threshold threshold_percent n_observations
+1        max_SPY_QQQ                 0.975 0.03033504          3.033504           6014
+2        min_SPY_QQQ                 0.975 0.02329019          2.329019           6014
+  n_exceedances exceedance_fraction       sigma        xi    se_sigma      se_xi
+1           151          0.02510808 0.010990249 0.1415400 0.001326465 0.09346386
+2           151          0.02510808 0.008570697 0.2269893 0.001056694 0.09992215
+
+Raw structure variable return levels:
+  structure_variable return_period_years return_level_decimal return_level_percent
+1        max_SPY_QQQ                   1           0.05350401             5.350401
+2        max_SPY_QQQ                   5           0.07929633             7.929633
+3        max_SPY_QQQ                  10           0.09234743             9.234743
+4        min_SPY_QQQ                   1           0.04292752             4.292752
+5        min_SPY_QQQ                   5           0.06823793             6.823793
+6        min_SPY_QQQ                  10           0.08233019             8.233019
+
+Dependence dashboard:
+     pair asset_x asset_y pearson_correlation   chi_hat chi_ci_lower_block
+1 spy_qqq     SPY     QQQ           0.9133033 0.7104609          0.5920418
+  chi_ci_upper_block implied_alpha_hat joint_ratio_975 conditional_coexceedance_975
+1          0.8368152         0.3668556        27.16732                    0.6821192
+  n_joint_975 angular_share_joint_0_4_0_6 angular_share_endpoint_heavy
+1         103                   0.3654485                    0.2126246
+  angular_balance_mean angular_balance_median endpoint_asymmetry
+1        -0.0007447872           -0.004222633        -0.02657807
+
+Methodological notes:
+1. Conditional co-exceedance probabilities are computed at equal marginal quantile levels.
+2. Therefore, they are interpreted as co-exceedance strength, not directional asymmetry.
+3. Directional structure is assessed using angular summaries based on W.
+4. The implied logistic alpha is derived from empirical chi and is not a full likelihood estimate.
+5. Block bootstrap intervals are included because financial extremes cluster.
+6. Frechet structure summaries are better for cross-pair comparison than raw SPY-VIX structure levels.

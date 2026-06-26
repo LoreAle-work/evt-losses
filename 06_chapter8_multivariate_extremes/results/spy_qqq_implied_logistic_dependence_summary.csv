@@ -1,0 +1,2 @@
+"pair","high_chi_cutoff","n_high_threshold_points","chi_hat","implied_alpha_hat","model_note"
+"spy_qqq",0.95,6,0.710460864684344,0.36685555712796,"implied_from_empirical_chi_not_full_likelihood"

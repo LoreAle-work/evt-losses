@@ -1,0 +1,2 @@
+"pair","asset_x","asset_y","n_observations","start_date","end_date","mean_x","mean_y","sd_x","sd_y","pearson_correlation","threshold_probability"
+"spy_tlt","SPY","TLT",6014,2002-07-31,2026-06-25,-0.000420123507318038,-0.000147537838036372,0.0118674276168877,0.00900605955635577,-0.303207837009049,0.975

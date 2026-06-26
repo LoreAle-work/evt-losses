@@ -1,0 +1,3 @@
+"pair","bootstrap_type","block_length","high_chi_cutoff","n_bootstrap_requested","n_bootstrap_success","chi_boot_mean","chi_boot_sd","chi_ci_lower","chi_ci_upper"
+"spy_vix","iid",NA,0.95,500,500,0.463679738458589,0.0424102132431565,0.382196666772241,0.539761390089791
+"spy_vix","block",5,0.95,500,500,0.463803805230477,0.0456125950701211,0.379244505325317,0.556749473890728

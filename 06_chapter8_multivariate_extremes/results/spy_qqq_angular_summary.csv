@@ -1,0 +1,2 @@
+"pair","angular_probability","radial_threshold","n_radial_extremes","mean_W","median_W","sd_W","angular_balance_mean","angular_balance_median","share_W_between_0_4_and_0_6","share_W_below_0_25","share_W_above_0_75","share_endpoint_heavy","endpoint_asymmetry"
+"spy_qqq",0.95,38.0897074336456,301,0.499255212841796,0.495777366588909,0.187188460955461,-0.000744787158203752,-0.00422263341109136,0.365448504983389,0.119601328903654,0.0930232558139535,0.212624584717608,-0.026578073089701
