@@ -151,9 +151,7 @@ The point process formulation is closely connected to the GEV distribution.
 
 The annual tail measure is:
 
-$$
-\Lambda(x)
-=
+$$\Lambda(x)=
 \left[
 1 + \xi \left(\frac{x - \mu}{\sigma}\right)
 \right]^{-1/\xi}
@@ -699,9 +697,7 @@ The main findings of Chapter 7 are:
 
    The stationary point process estimate is:
 
-   $$
-   \hat{\xi} = 0.2841
-   $$
+   $$\hat{\xi} = 0.2841$$
 
    which supports a heavy-tailed, Fréchet-type interpretation.
 
