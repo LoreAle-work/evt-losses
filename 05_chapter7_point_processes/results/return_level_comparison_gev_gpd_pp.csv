@@ -1,0 +1,10 @@
+"model","return_period_years","return_level_decimal","return_level_percent"
+"Chapter 3 GEV monthly maxima",1,0.0382182125822197,3.82182125822197
+"Chapter 3 GEV monthly maxima",5,0.0632525612269564,6.32525612269564
+"Chapter 3 GEV monthly maxima",10,0.0766493657911788,7.66493657911788
+"Chapter 4 stationary GPD",1,0.0446290040835325,4.46290040835325
+"Chapter 4 stationary GPD",5,0.0736575109817637,7.36575109817637
+"Chapter 4 stationary GPD",10,0.0908599997974758,9.08599997974759
+"stationary point process",1,0.0446181113195379,4.46181113195379
+"stationary point process",5,0.0736812992881204,7.36812992881204
+"stationary point process",10,0.0909188076875243,9.09188076875243

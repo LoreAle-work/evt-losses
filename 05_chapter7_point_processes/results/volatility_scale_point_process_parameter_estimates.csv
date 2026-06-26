@@ -1,0 +1,5 @@
+"model","parameter","estimate","standard_error"
+"volatility-dependent point process scale","mu",0.0537659489359914,0.00282148764936788
+"volatility-dependent point process scale","beta_0",-3.93036198136593,0.0943761777744506
+"volatility-dependent point process scale","beta_vol",-0.193670459532088,0.0238507245299282
+"volatility-dependent point process scale","xi",0.165338223257368,0.0623536705357144

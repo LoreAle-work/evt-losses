@@ -1,0 +1,4 @@
+"model","parameter","estimate","standard_error","natural_scale"
+"stationary point process","mu",0.0446181113195379,0.00212275212731406,NA
+"stationary point process","log_sigma",-4.25149405727294,0.129167559740861,0.0142429382390212
+"stationary point process","xi",0.284110828351447,0.0930009160229855,NA

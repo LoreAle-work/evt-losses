@@ -1,0 +1,6 @@
+"volatility_state","volatility_quantile","z_vol"
+"low volatility",0.25,-0.718101421221494
+"median volatility",0.5,-0.0716589282434275
+"high volatility",0.75,0.657464307260888
+"crisis volatility",0.9,1.30156990639059
+"extreme crisis volatility",0.95,1.65204628175994

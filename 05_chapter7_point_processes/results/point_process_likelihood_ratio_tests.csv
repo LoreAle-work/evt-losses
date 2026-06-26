@@ -1,0 +1,5 @@
+"comparison","LR_statistic","df","p_value"
+"stationary vs volatility scale",118.956757277195,1,1.07037690514298e-27
+"stationary vs volatility location",247.644666854736,1,8.47096892507477e-56
+"volatility scale vs volatility location + scale",147.836977901304,1,5.149524143804e-34
+"volatility location vs volatility location + scale",19.149068323763,1,1.20896499823724e-05

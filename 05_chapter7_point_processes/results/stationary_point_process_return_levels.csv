@@ -1,0 +1,7 @@
+"model","return_period_years","return_level_decimal","return_level_percent"
+"stationary point process",1,0.0446181113195379,4.46181113195379
+"stationary point process",5,0.0736812992881204,7.36812992881204
+"stationary point process",10,0.0909188076875243,9.09188076875243
+"stationary point process",20,0.111908224513668,11.1908224513668
+"stationary point process",50,0.146824248870591,14.6824248870591
+"stationary point process",100,0.179982019209042,17.9982019209043

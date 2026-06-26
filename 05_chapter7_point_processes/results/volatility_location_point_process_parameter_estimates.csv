@@ -1,0 +1,5 @@
+"model","parameter","estimate","standard_error","natural_scale"
+"volatility-dependent point process location","mu_0",0.0380109048115086,0.00138785937587999,NA
+"volatility-dependent point process location","mu_vol",0.0134124705818398,0.00136677869210338,NA
+"volatility-dependent point process location","log_sigma",-4.60413020938933,0.0646623043485884,0.0100104051756194
+"volatility-dependent point process location","xi",-0.127849997909117,0.0372264361451411,NA
